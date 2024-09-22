@@ -1,1 +1,0 @@
-# QualDev_G7

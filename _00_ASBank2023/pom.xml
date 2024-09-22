@@ -5,13 +5,10 @@
 	<groupId>com.iut.banque</groupId>
 	<artifactId>_00_ASBank2023</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>pom</packaging>
+	<packaging>war</packaging>
 	<name>_00_ASBank2023</name>
-    <modules>
-		<module>Maven_G7</module>
-	</modules>
 
-    <properties>
+	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
