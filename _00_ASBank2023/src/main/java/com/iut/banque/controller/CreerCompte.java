@@ -12,6 +12,7 @@ import com.iut.banque.exceptions.TechnicalException;
 import com.iut.banque.facade.BanqueFacade;
 import com.iut.banque.modele.Client;
 import com.iut.banque.modele.Compte;
+import java.util.logging.Logger;
 
 public class CreerCompte extends ActionSupport {
 
@@ -19,12 +20,13 @@ public class CreerCompte extends ActionSupport {
 	private String numeroCompte;
 	private boolean avecDecouvert;
 	private double decouvertAutorise;
-	private Client client;
+	private transient Client client;
 	private String message;
 	private boolean error;
 	private boolean result;
-	private BanqueFacade banque;
-	private Compte compte;
+	private transient BanqueFacade banque;
+	private transient Compte compte;
+	private static final Logger logger = Logger.getLogger(CreerCompte.class.getName());
 
 	/**
 	 * @param compte
@@ -50,7 +52,7 @@ public class CreerCompte extends ActionSupport {
 
 	/**
 	 * Indique si le résultat de l'action précedente avait réussi
-	 * 
+	 *
 	 * @return le status de l'action précédente
 	 */
 	public boolean isError() {
@@ -59,7 +61,7 @@ public class CreerCompte extends ActionSupport {
 
 	/**
 	 * Setter de l'action précédente
-	 * 
+	 *
 	 * @param error
 	 */
 	public void setError(boolean error) {
@@ -78,7 +80,7 @@ public class CreerCompte extends ActionSupport {
 	 * Constructeur sans paramêtre de CreerCompte
 	 */
 	public CreerCompte() {
-		System.out.println("In Constructor from CreerCompte class ");
+		logger.info("In Constructor from CreerCompte class ");
 		ApplicationContext context = WebApplicationContextUtils
 				.getRequiredWebApplicationContext(ServletActionContext.getServletContext());
 		this.banque = (BanqueFacade) context.getBean("banqueFacade");
@@ -131,7 +133,7 @@ public class CreerCompte extends ActionSupport {
 
 	/**
 	 * Getter du message résultant de l'action précédente.
-	 * 
+	 *
 	 * @return le message
 	 */
 	public String getMessage() {
@@ -140,7 +142,7 @@ public class CreerCompte extends ActionSupport {
 
 	/**
 	 * Choisi le message à enregistrer en fonction du message reçu en paramêtre.
-	 * 
+	 *
 	 * @param message
 	 *            : le message indiquant le status de l'action précédente.
 	 */
@@ -155,6 +157,9 @@ public class CreerCompte extends ActionSupport {
 		case "SUCCESS":
 			this.message = "Le compte " + compte.getNumeroCompte() + " a bien été créé.";
 			break;
+		default:
+			this.message = "Message inconnu : " + message;
+			break;
 		}
 	}
 
@@ -162,7 +167,7 @@ public class CreerCompte extends ActionSupport {
 	 * Getter du status de l'action précédente. Si vrai, indique qu'une création
 	 * de compte a déjà été essayée (elle peut avoir réussi ou non). Sinon, le
 	 * client vient d'arriver sur la page.
-	 * 
+	 *
 	 * @return le status de l'action précédente
 	 */
 	public boolean isResult() {
@@ -171,7 +176,7 @@ public class CreerCompte extends ActionSupport {
 
 	/**
 	 * Setter du status de l'action précédente.
-	 * 
+	 *
 	 * @param result
 	 *            : le status
 	 */
@@ -181,27 +186,27 @@ public class CreerCompte extends ActionSupport {
 
 	/**
 	 * Action créant un compte client ou gestionnaire.
-	 * 
+	 *
 	 * @return une chaine déterminant le résultat de l'action
 	 */
 	public String creationCompte() {
 		try {
 			if (avecDecouvert) {
-				try {
-					banque.createAccount(numeroCompte, client, decouvertAutorise);
-				} catch (IllegalOperationException e) {
-					e.printStackTrace();
-				}
+				banque.createAccount(numeroCompte, client, decouvertAutorise);
 			} else {
 				banque.createAccount(numeroCompte, client);
 			}
 			this.compte = banque.getCompte(numeroCompte);
 			return "SUCCESS";
+		}catch (IllegalOperationException e) {
+			e.printStackTrace();
+			return "ILLEGALOPERATION";
 		} catch (TechnicalException e) {
+			e.printStackTrace();
 			return "NONUNIQUEID";
 		} catch (IllegalFormatException e) {
+			e.printStackTrace();
 			return "INVALIDFORMAT";
 		}
-
 	}
 }

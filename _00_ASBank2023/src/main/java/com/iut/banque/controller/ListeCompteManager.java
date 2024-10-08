@@ -13,25 +13,27 @@ import com.iut.banque.exceptions.TechnicalException;
 import com.iut.banque.facade.BanqueFacade;
 import com.iut.banque.modele.Client;
 import com.iut.banque.modele.Compte;
+import java.util.logging.Logger;
 
 public class ListeCompteManager extends ActionSupport {
 
 	private static final long serialVersionUID = 1L;
-	private BanqueFacade banque;
+	private transient BanqueFacade banque;
 	private boolean aDecouvert;
-	private Compte compte;
-	private Client client;
+	private transient Compte compte;
+	private transient Client client;
 	private String userInfo;
 	private String compteInfo;
+	private static final Logger logger = Logger.getLogger(ListeCompteManager.class.getName());
 
 	/**
 	 * Constructeur de la classe Connect
-	 * 
+	 *
 	 * @return Un objet de type Connect avec façade BanqueFacade provenant de sa
 	 *         factory
 	 */
 	public ListeCompteManager() {
-		System.out.println("In Constructor from ListeCompteManager class ");
+		logger.info("In Constructor from ListeCompteManager class ");
 		ApplicationContext context = WebApplicationContextUtils
 				.getRequiredWebApplicationContext(ServletActionContext.getServletContext());
 		this.banque = (BanqueFacade) context.getBean("banqueFacade");
