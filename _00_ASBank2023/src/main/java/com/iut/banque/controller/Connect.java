@@ -13,19 +13,13 @@ import com.iut.banque.facade.BanqueFacade;
 import com.iut.banque.modele.Client;
 import com.iut.banque.modele.Compte;
 import com.iut.banque.modele.Utilisateur;
-import java.util.logging.Logger;
-
 
 public class Connect extends ActionSupport {
 
 	private static final long serialVersionUID = 1L;
-	private static final Logger logger = Logger.getLogger(Connect.class.getName());
 	private String userCde;
 	private String userPwd;
-	private static final String ERROR = "ERROR";
-	private static final String SUCCESS = "SUCCESS";
-	private static final String SUCCESS_MANAGER = "SUCCESSMANAGER";
-	private transient BanqueFacade banque;
+	private BanqueFacade banque;
 
 	/**
 	 * Constructeur de la classe Connect
@@ -34,7 +28,7 @@ public class Connect extends ActionSupport {
 	 *         factory
 	 */
 	public Connect() {
-		logger.info("In Constructor from Connect class ");
+		System.out.println("In Constructor from Connect class ");
 		ApplicationContext context = WebApplicationContextUtils
 				.getRequiredWebApplicationContext(ServletActionContext.getServletContext());
 		this.banque = (BanqueFacade) context.getBean("banqueFacade");
@@ -49,10 +43,10 @@ public class Connect extends ActionSupport {
 	 *         échec
 	 */
 	public String login() {
-		logger.info("Essai de login - 20180512...");
+		System.out.println("Essai de login - 20180512...");
 
 		if (userCde == null || userPwd == null) {
-			return ERROR;
+			return "ERROR";
 		}
 		userCde = userCde.trim();
 
@@ -66,17 +60,17 @@ public class Connect extends ActionSupport {
 
 		switch (loginResult) {
 		case LoginConstants.USER_IS_CONNECTED:
-			logger.info("user logged in");
-			return SUCCESS;
+			System.out.println("user logged in");
+			return "SUCCESS";
 		case LoginConstants.MANAGER_IS_CONNECTED:
-			logger.info("manager logged in");
-			return SUCCESS_MANAGER;
+			System.out.println("manager logged in");
+			return "SUCCESSMANAGER";
 		case LoginConstants.LOGIN_FAILED:
-			logger.warning("login failed");
-			return ERROR;
+			System.out.println("login failed");
+			return "ERROR";
 		default:
-			logger.severe("error");
-			return ERROR;
+			System.out.println("error");
+			return "ERROR";
 		}
 	}
 
@@ -140,9 +134,9 @@ public class Connect extends ActionSupport {
 	}
 
 	public String logout() {
-		logger.info("Logging out");
+		System.out.println("Logging out");
 		banque.logout();
-		return SUCCESS;
+		return "SUCCESS";
 	}
 
 }

@@ -11,23 +11,14 @@ import com.iut.banque.modele.Client;
 import com.iut.banque.modele.Compte;
 import com.iut.banque.modele.Gestionnaire;
 import com.opensymphony.xwork2.ActionSupport;
-import java.util.logging.Logger;
-
 
 public class DetailCompte extends ActionSupport {
 
 	private static final long serialVersionUID = 1L;
-	protected transient BanqueFacade banque;
+	protected BanqueFacade banque;
 	private String montant;
 	private String error;
-	protected transient Compte compte;
-	private static final String TECHNICAL_ERROR = "TECHNICAL";
-	private static final String BUSINESS_ERROR = "BUSINESS";
-	private static final String NEGATIVE_AMOUNT_ERROR = "NEGATIVEAMOUNT";
-	private static final String NEGATIVE_OVERDRAFT_ERROR = "NEGATIVEOVERDRAFT";
-	private static final String INCOMPATIBLE_OVERDRAFT_ERROR = "INCOMPATIBLEOVERDRAFT";
-	private static final String NOTENOUGH_FUNDS = "NOTENOUGH_FUNDS";
-	private static final Logger logger = Logger.getLogger(DetailCompte.class.getName());
+	protected Compte compte;
 
 	/**
 	 * Constructeur du controlleur DetailCompte
@@ -38,7 +29,7 @@ public class DetailCompte extends ActionSupport {
 	 *         la factory
 	 */
 	public DetailCompte() {
-		logger.info("In Constructor from DetailCompte class ");
+		System.out.println("In Constructor from DetailCompte class ");
 		ApplicationContext context = WebApplicationContextUtils
 				.getRequiredWebApplicationContext(ServletActionContext.getServletContext());
 		this.banque = (BanqueFacade) context.getBean("banqueFacade");
@@ -52,18 +43,18 @@ public class DetailCompte extends ActionSupport {
 	 */
 	public String getError() {
 		switch (error) {
-			case TECHNICAL_ERROR:
-				return "Erreur interne. Vérifiez votre saisie puis réessayez. Contactez votre conseiller si le problème persiste.";
-			case BUSINESS_ERROR:
-				return "Fonds insuffisants.";
-			case NEGATIVE_AMOUNT_ERROR:
-				return "Veuillez entrer un montant positif.";
-			case NEGATIVE_OVERDRAFT_ERROR:
-				return "Veuillez entrer un découvert positif.";
-			case INCOMPATIBLE_OVERDRAFT_ERROR:
-				return "Le nouveau découvert est incompatible avec le solde actuel.";
-			default:
-				return "";
+		case "TECHNICAL":
+			return "Erreur interne. Verifiez votre saisie puis réessayer. Contactez votre conseiller si le problème persiste.";
+		case "BUSINESS":
+			return "Fonds insuffisants.";
+		case "NEGATIVEAMOUNT":
+			return "Veuillez rentrer un montant positif.";
+		case "NEGATIVEOVERDRAFT":
+			return "Veuillez rentrer un découvert positif.";
+		case "INCOMPATIBLEOVERDRAFT":
+			return "Le nouveau découvert est incompatible avec le solde actuel.";
+		default:
+			return "";
 		}
 	}
 
@@ -113,19 +104,15 @@ public class DetailCompte extends ActionSupport {
 	 *         l'utilisateur
 	 */
 	public Compte getCompte() {
-		Object connectedUser = banque.getConnectedUser();
-
-		if (connectedUser instanceof Gestionnaire) {
+		if (banque.getConnectedUser() instanceof Gestionnaire) {
 			return compte;
+		} else if (banque.getConnectedUser() instanceof Client) {
+			if (((Client) banque.getConnectedUser()).getAccounts().containsKey(compte.getNumeroCompte())) {
+				return compte;
+			}
 		}
-
-		if (connectedUser instanceof Client && ((Client) connectedUser).getAccounts().containsKey(compte.getNumeroCompte())) {
-			return compte;
-		}
-
 		return null;
 	}
-
 
 	public void setCompte(Compte compte) {
 		this.compte = compte;
@@ -141,22 +128,22 @@ public class DetailCompte extends ActionSupport {
 		Compte compte = getCompte();
 		try {
 			banque.debiter(compte, Double.parseDouble(montant.trim()));
-			return SUCCESS;
+			return "SUCCESS";
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
-			return ERROR;
+			return "ERROR";
 		} catch (InsufficientFundsException ife) {
 			ife.printStackTrace();
-			return NOTENOUGH_FUNDS;
+			return "NOTENOUGHFUNDS";
 		} catch (IllegalFormatException e) {
 			e.printStackTrace();
-			return NEGATIVE_AMOUNT_ERROR;
+			return "NEGATIVEAMOUNT";
 		}
 	}
 
 	/**
 	 * Méthode crédit pour créditer le compte considéré en cours
-	 *
+	 * 
 	 * @return String : Message correspondant à l'état du crédit (si il a réussi
 	 *         ou pas)
 	 */
@@ -164,13 +151,13 @@ public class DetailCompte extends ActionSupport {
 		Compte compte = getCompte();
 		try {
 			banque.crediter(compte, Double.parseDouble(montant.trim()));
-			return SUCCESS;
+			return "SUCCESS";
 		} catch (NumberFormatException nfe) {
 			nfe.printStackTrace();
-			return ERROR;
+			return "ERROR";
 		} catch (IllegalFormatException e) {
 			e.printStackTrace();
-			return NEGATIVE_AMOUNT_ERROR;
+			return "NEGATIVEAMOUNT";
 		}
 	}
 }

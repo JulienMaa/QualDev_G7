@@ -12,7 +12,6 @@ import com.iut.banque.exceptions.TechnicalException;
 import com.iut.banque.facade.BanqueFacade;
 import com.iut.banque.modele.Client;
 import com.iut.banque.modele.Compte;
-import java.util.logging.Logger;
 
 public class CreerCompte extends ActionSupport {
 
@@ -20,13 +19,12 @@ public class CreerCompte extends ActionSupport {
 	private String numeroCompte;
 	private boolean avecDecouvert;
 	private double decouvertAutorise;
-	private transient Client client;
+	private Client client;
 	private String message;
 	private boolean error;
 	private boolean result;
-	private transient BanqueFacade banque;
-	private transient Compte compte;
-	private static final Logger logger = Logger.getLogger(CreerCompte.class.getName());
+	private BanqueFacade banque;
+	private Compte compte;
 
 	/**
 	 * @param compte
@@ -80,7 +78,7 @@ public class CreerCompte extends ActionSupport {
 	 * Constructeur sans paramêtre de CreerCompte
 	 */
 	public CreerCompte() {
-		logger.info("In Constructor from CreerCompte class ");
+		System.out.println("In Constructor from CreerCompte class ");
 		ApplicationContext context = WebApplicationContextUtils
 				.getRequiredWebApplicationContext(ServletActionContext.getServletContext());
 		this.banque = (BanqueFacade) context.getBean("banqueFacade");
@@ -157,9 +155,6 @@ public class CreerCompte extends ActionSupport {
 		case "SUCCESS":
 			this.message = "Le compte " + compte.getNumeroCompte() + " a bien été créé.";
 			break;
-		default:
-			this.message = "Message inconnu : " + message;
-			break;
 		}
 	}
 
@@ -192,21 +187,21 @@ public class CreerCompte extends ActionSupport {
 	public String creationCompte() {
 		try {
 			if (avecDecouvert) {
-				banque.createAccount(numeroCompte, client, decouvertAutorise);
+				try {
+					banque.createAccount(numeroCompte, client, decouvertAutorise);
+				} catch (IllegalOperationException e) {
+					e.printStackTrace();
+				}
 			} else {
 				banque.createAccount(numeroCompte, client);
 			}
 			this.compte = banque.getCompte(numeroCompte);
 			return "SUCCESS";
-		}catch (IllegalOperationException e) {
-			e.printStackTrace();
-			return "ILLEGALOPERATION";
 		} catch (TechnicalException e) {
-			e.printStackTrace();
 			return "NONUNIQUEID";
 		} catch (IllegalFormatException e) {
-			e.printStackTrace();
 			return "INVALIDFORMAT";
 		}
+
 	}
 }
