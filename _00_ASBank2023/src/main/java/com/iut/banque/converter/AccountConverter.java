@@ -1,6 +1,7 @@
 package com.iut.banque.converter;
 
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.apache.struts2.util.StrutsTypeConverter;
 
@@ -13,56 +14,54 @@ import com.iut.banque.modele.Compte;
  * Cette classe contient des méthodes permettant de convertir un compte en
  * string et vice-versa. Elle est déclarée dans
  * «src/main/webapp/WEB-INF/classes/xwork-conversion.properties.
- * 
- * Grâce à cette classe il est possible de passer en paramêtre d'une action
+
+ * Grâce à cette classe il est possible de passer en paramètre d'une action
  * Struts le numéro d'un compte (une string) et le contrôleur qui va
- * recevoir le paramêtre n'a besoin que d'un setter prenant un objet de type
+ * recevoir le paramètre n'a besoin que d'un setter prenant un objet de type
  * Compte.
  */
 public class AccountConverter extends StrutsTypeConverter {
 
+	Logger logger = Logger.getLogger(getClass().getName());
+
 	/**
-	 * DAO utilisée pour récuperer les objets correspondants à l'id passé en
-	 * paramêtre de convertFromString.
-	 * 
+	 * DAO utilisée pour récupérer les objets correspondants à l'id passé en
+	 * paramètre de convertFromString.
+
 	 * Note : Ce champ est static car pour une raison qui nous échappe, le scope
 	 * « singleton » du bean Spring utilisé pour l'injection n'est pas respecté.
 	 * Ainsi, au chargement de l'application, trois objets de cette classe sont
 	 * instanciés et seulement le premier a une DAO injectée correctement.
 	 */
-	private static IDao dao;
+	private IDao dao;
 
 	/**
-	 * Constructeur avec paramêtre pour le AccountConverter.
-	 * 
+	 * Constructeur avec paramètre pour le AccountConverter.
+
 	 * Utilisé pour l'injection de dépendance.
-	 * 
-	 * @param dao
+	 *
 	 */
 	public AccountConverter(IDao dao) {
-		System.out.println("=========================");
-		System.out.println("Création du convertisseur de compte");
-		AccountConverter.dao = dao;
-		//System.out.println("DAO injectée : " + dao);
+		logger.info("=========================");
+		logger.info("Création du convertisseur de compte");
+		this.dao = dao;
 	}
 
 	/**
-	 * 	Constructeur sans paramêtre pour le AccountConverter
+	 * 	Constructeur sans paramètre pour le AccountConverter
 	 */
 	public AccountConverter() {
-		System.out.println("=========================");
-		System.out.println("Création du convertisseur de compte");
-		//System.out.println("DAO : " + dao);
+		logger.info("=========================");
+		logger.info("Création du convertisseur de compte");
 	}
 
 	/**
 	 * Permet la conversion automatique par Struts d'un tableau de chaine vers
 	 * un Compte
 	 */
-	@SuppressWarnings("rawtypes")
 	@Override
 	public Object convertFromString(Map context, String[] values, Class classe) {
-		Compte compte = (Compte) dao.getAccountById(values[0]);
+		Compte compte = dao.getAccountById(values[0]);
 		if (compte == null) {
 			throw new TypeConversionException("Impossible de convertir la chaine suivante : " + values[0]);
 		}
@@ -72,7 +71,6 @@ public class AccountConverter extends StrutsTypeConverter {
 	/**
 	 * Permet la conversion automatique par Struts d'un compte vers une chaine.
 	 */
-	@SuppressWarnings("rawtypes")
 	@Override
 	public String convertToString(Map context, Object value) {
 		Compte compte = (Compte) value;

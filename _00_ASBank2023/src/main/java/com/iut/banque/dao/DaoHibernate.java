@@ -3,6 +3,8 @@ package com.iut.banque.dao;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Collections;
+import java.util.logging.Logger;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -21,10 +23,10 @@ import com.iut.banque.modele.Utilisateur;
 
 /**
  * Implémentation de IDao utilisant Hibernate.
- * 
- * Les transactions sont gerés par Spring et utilise le transaction manager
+
+ * Les transactions sont gérés par Spring et utilise le transaction manager
  * défini dans l'application Context.
- * 
+
  * Par défaut, la propagation des transactions est REQUIRED, ce qui signifie que
  * si une transaction est déjà commencé elle va être réutilisée. Cela est util
  * pour les tests unitaires de la DAO.
@@ -32,16 +34,18 @@ import com.iut.banque.modele.Utilisateur;
 @Transactional
 public class DaoHibernate implements IDao {
 
+	Logger logger = Logger.getLogger(getClass().getName());
+
 	private SessionFactory sessionFactory;
 
 	public DaoHibernate() {
-		System.out.println("==================");
-		System.out.println("Création de la Dao");
+		logger.info("==================");
+		logger.info("Création de la Dao");
 	}
 
 	/**
 	 * Setter pour la SessionFactory.
-	 * 
+
 	 * Cette méthode permet à Spring d'injecter la factory au moment de la
 	 * construction de la DAO.
 	 * 
@@ -123,7 +127,7 @@ public class DaoHibernate implements IDao {
 		if (client != null) {
 			return client.getAccounts();
 		} else {
-			return null;
+			return Collections.emptyMap();
 		}
 	}
 
@@ -137,14 +141,14 @@ public class DaoHibernate implements IDao {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * 
-	 * @throws IllegalFormatException
-	 * @throws IllegalArgumentException
-	 */
+     * {@inheritDoc}
+     *
+     * @throws IllegalFormatException
+     * @throws IllegalArgumentException
+     */
 	@Override
-	public Utilisateur createUser(String nom, String prenom, String adresse, boolean male, String userId,
-			String userPwd, boolean manager, String numClient)
+	public void createUser(String nom, String prenom, String adresse, boolean male, String userId,
+                           String userPwd, String numClient)
 			throws TechnicalException, IllegalArgumentException, IllegalFormatException {
 		Session session = sessionFactory.getCurrentSession();
 
@@ -153,15 +157,14 @@ public class DaoHibernate implements IDao {
 			throw new TechnicalException("User Id déjà utilisé.");
 		}
 
-		if (manager) {
+		if (numClient == null) {
 			user = new Gestionnaire(nom, prenom, adresse, male, userId, userPwd);
 		} else {
 			user = new Client(nom, prenom, adresse, male, userId, userPwd, numClient);
 		}
 		session.save(user);
 
-		return user;
-	}
+    }
 
 	/**
 	 * {@inheritDoc}
@@ -189,16 +192,14 @@ public class DaoHibernate implements IDao {
 	 */
 	@Override
 	public boolean isUserAllowed(String userId, String userPwd) {
-		Session session = null;
 		if (userId == null || userPwd == null) {
 			return false;
 		} else {
-			session = sessionFactory.openSession();
 			userId = userId.trim();
-			if ("".equals(userId) || "".equals(userPwd)) {
+			if (userId.isEmpty() || userPwd.isEmpty()) {
 				return false;
 			} else {
-				session = sessionFactory.getCurrentSession();
+				Session session = sessionFactory.getCurrentSession();
 				Utilisateur user = session.get(Utilisateur.class, userId);
 				if (user == null) {
 					return false;
@@ -214,8 +215,7 @@ public class DaoHibernate implements IDao {
 	@Override
 	public Utilisateur getUserById(String id) {
 		Session session = sessionFactory.getCurrentSession();
-		Utilisateur user = session.get(Utilisateur.class, id);
-		return user;
+		return session.get(Utilisateur.class, id);
 	}
 
 	/**
@@ -226,7 +226,7 @@ public class DaoHibernate implements IDao {
 		Session session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("unchecked")
 		List<Object> res = session.createCriteria(Client.class).list();
-		Map<String, Client> ret = new HashMap<String, Client>();
+		Map<String, Client> ret = new HashMap<>();
 		for (Object client : res) {
 			ret.put(((Client) client).getUserId(), (Client) client);
 		}
@@ -241,7 +241,7 @@ public class DaoHibernate implements IDao {
 		Session session = sessionFactory.getCurrentSession();
 		@SuppressWarnings("unchecked")
 		List<Object> res = session.createCriteria(Gestionnaire.class).list();
-		Map<String, Gestionnaire> ret = new HashMap<String, Gestionnaire>();
+		Map<String, Gestionnaire> ret = new HashMap<>();
 		for (Object gestionnaire : res) {
 			ret.put(((Gestionnaire) gestionnaire).getUserId(), (Gestionnaire) gestionnaire);
 		}
@@ -253,7 +253,7 @@ public class DaoHibernate implements IDao {
 	 */
 	@Override
 	public void disconnect() {
-		System.out.println("Déconnexion de la DAO.");
+		logger.info("Déconnexion de la DAO.");
 	}
 
 }

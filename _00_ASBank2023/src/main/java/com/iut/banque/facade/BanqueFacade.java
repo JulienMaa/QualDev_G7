@@ -15,15 +15,13 @@ import com.iut.banque.modele.Utilisateur;
 
 public class BanqueFacade {
 
-	private BanqueManager banqueManager;
-	private LoginManager loginManager;
+	private final BanqueManager banqueManager;
+	private final LoginManager loginManager;
 
 	/**
 	 * Constructeur de la facade sans paramètre
-	 * 
-	 * @return BanqueFacade : avec un nouveau BanqueManager et un nouveau
-	 *         LoginManager
-	 */
+	 *
+     */
 	public BanqueFacade(LoginManager loginMng, BanqueManager banqueMng) {
 		this.banqueManager = banqueMng;
 		this.loginManager = loginMng;
@@ -42,7 +40,7 @@ public class BanqueFacade {
 	 * Tentative de connection.
 	 * 
 	 * @param userCde
-	 *            : le String de l'user qui tente de s'identifier
+	 *            : le String du user qui tente de s'identifier
 	 * @param userPwd
 	 *            : le String du mot de passe qui doit être vérifié
 	 * @return int : correspondant à une constante issue de LoginConstants qui
@@ -141,7 +139,8 @@ public class BanqueFacade {
 	 *             compte de la base
 	 * @throws IllegalFormatException
 	 *             : si le numeroCompte n'est pas du bon format
-	 * @throws IllegalOperationException 
+	 * @throws IllegalOperationException
+	 * 			   : si decouvertAutorise est inférieur à 0
 	 */
 	public void createAccount(String numeroCompte, Client client, double decouvertAutorise)
 			throws TechnicalException, IllegalFormatException, IllegalOperationException {
@@ -169,24 +168,31 @@ public class BanqueFacade {
 
 	/**
 	 * Cr�er un manager. L'utilisateur connecté doit être un gestionnaire.
-	 * 
+	 *
 	 * @param userId
+	 *            String pour le userId à utiliser
 	 * @param userPwd
+	 *            String pour le password à utiliser
 	 * @param nom
+	 *            String pour le nom
 	 * @param prenom
+	 *            String pour le prenom
 	 * @param adresse
+	 *            String pour l'adresse
 	 * @param male
+	 *            boolean pour savoir si c'est un homme ou une femme
 	 * @throws TechnicalException
-	 *             : Si l'id fourni en param�tre est déjà assigné à un autre
+	 *             : Si l'id fourni en paramètre est déjà assigné à un autre
 	 *             utilisateur de la base
 	 * @throws IllegalFormatException
+	 * 			   : Si le format de l'un des paramètres est invalide
 	 * @throws IllegalArgumentException
+	 * 			   : Si l'un des paramètres est invalide
 	 */
 	public void createManager(String userId, String userPwd, String nom, String prenom, String adresse, boolean male)
 			throws TechnicalException, IllegalArgumentException, IllegalFormatException {
 		if (loginManager.getConnectedUser() instanceof Gestionnaire) {
 			banqueManager.createManager(userId, userPwd, nom, prenom, adresse, male);
-			;
 		}
 	}
 
@@ -195,20 +201,29 @@ public class BanqueFacade {
 	 * L'utilisateur connecté doit être un gestionnaire.
 	 * 
 	 * @param userId
+	 * 	 		: l'id du gestionnaire
 	 * @param userPwd
+	 * 	 		: le mot de passe du gestionnaire
 	 * @param nom
+	 * 	 		: le nom du gestionnaire
 	 * @param prenom
+	 * 			: le prenom du gestionnaire
 	 * @param adresse
+	 * 			: l'adresse du gestionnaire
 	 * @param male
+	 * 			: si le user est un homme ou non
 	 * @param numeroClient
+	 * 			: le numero de client du gestionnaire
 	 * @throws IllegalOperationException
-	 *             : si le numeroClient founri en paramètre est déjà assigné à
+	 *             : si le numeroClient fourni en paramètre est déjà assigné à
 	 *             un autre utilisateur de la base
 	 * @throws TechnicalException
 	 *             : Si l'id fourni en paramètre est déjà assigné à un autre
 	 *             utilisateur de la base
 	 * @throws IllegalFormatException
+	 * 				: Si le format de l'un des paramètres est invalide
 	 * @throws IllegalArgumentException
+	 * 				: Si l'un des paramètres est invalide
 	 */
 	public void createClient(String userId, String userPwd, String nom, String prenom, String adresse, boolean male,
 			String numeroClient)
@@ -219,12 +234,11 @@ public class BanqueFacade {
 	}
 
 	/**
-	 * 
+	 *
 	 * L'utilisateur connecté doit être un gestionnaire.
-	 * 
-	 * @param u
+	 *
 	 * @throws IllegalOperationException
-	 *             si l'user est null ou si l'utilisateur n'est pas un
+	 *             si le user est null ou si l'utilisateur n'est pas un
 	 *             utilisateur persistant.
 	 * @throws TechnicalException
 	 *             si le manager à supprimer est le dernier dans la base
@@ -236,8 +250,8 @@ public class BanqueFacade {
 	}
 
 	/**
-	 * L'utilisateur connecté doit être un getstionnaire
-	 * 
+	 * L'utilisateur connecté doit être un gestionnaire
+
 	 * Charge la banqueManager avec une map de tous les clients
 	 */
 	public void loadClients() {
@@ -247,7 +261,7 @@ public class BanqueFacade {
 	}
 
 	/**
-	 * Méthode pour récupérer un objet compte basé sur son String identidiant
+	 * Méthode pour récupérer un objet compte basé sur son String identifiant
 	 * 
 	 * @param idCompte
 	 *            : String correspondant à l'ID du compte qu'on veut récupérer
@@ -259,7 +273,7 @@ public class BanqueFacade {
 
 	/**
 	 * L'utilisateur connecté doit être un gestionnaire
-	 * 
+
 	 * Méthode pour changer le découvert autorisé d'un compte
 	 * 
 	 * @param compte
@@ -269,7 +283,9 @@ public class BanqueFacade {
 	 *            : double correspondant au nouveau montant de découvert qu'on
 	 *            veut assigner
 	 * @throws IllegalFormatException
-	 * @throws IllegalOperationException 
+	 * 		 	  : Si le format de l'un des paramètres est invalide
+	 * @throws IllegalOperationException
+	 * 			  : Si le nouveauDecouvert est le même que le decouvert actuel du compte
 	 */
 	public void changeDecouvert(CompteAvecDecouvert compte, double nouveauDecouvert) throws IllegalFormatException, IllegalOperationException {
 		if (loginManager.getConnectedUser() instanceof Gestionnaire) {

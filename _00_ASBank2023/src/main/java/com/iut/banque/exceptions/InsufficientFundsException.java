@@ -5,6 +5,8 @@ package com.iut.banque.exceptions;
  * souhaite r�aliser ne peut se faire en raison de fonds insuffisant (un d�bit
  * d�passant le d�couvert autoris� par exemple)
  */
+
+@SuppressWarnings("unused")
 public class InsufficientFundsException extends Exception {
 
 	private static final long serialVersionUID = 1L;

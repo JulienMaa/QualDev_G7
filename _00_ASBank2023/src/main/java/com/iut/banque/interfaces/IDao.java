@@ -12,20 +12,27 @@ import com.iut.banque.modele.CompteSansDecouvert;
 import com.iut.banque.modele.Gestionnaire;
 import com.iut.banque.modele.Utilisateur;
 
+@SuppressWarnings("unused")
 public interface IDao {
 
 	/**
 	 * Méthode pour créer un compte avec découvert dans la base de données
-	 * 
-	 * @param Multiple
-	 *            : Données correspondant à la création d'un compte avec
-	 *            découvert
+	 *
+     * @param solde
+     *            : le solde du compte à créer
+     * @param numeroCompte
+     *            : le numéro du compte à créer
+     * @param decouvertAutorise
+     *            : le decouvert autorisé du compte
+     * @param client
+     *            : le client à qui appartient le compte
 	 * @return CompteAvecDecouvert : l'objet compte qui a été implémenté dans la
 	 *         base. Envoie une exception en cas d'erreur
 	 * @throws TechnicalException
 	 *             : si le numéro de compte existe déjà IllegalFormatException : si
 	 *             l'appel du constructeur du CompteSansDecouvert échoue
-	 * @throws IllegalOperationException 
+	 * @throws IllegalOperationException
+	 * 				: Si le solde est négatif
 	 */
 	CompteAvecDecouvert createCompteAvecDecouvert(double solde,
 			String numeroCompte, double decouvertAutorise, Client client)
@@ -33,10 +40,13 @@ public interface IDao {
 
 	/**
 	 * Méthode pour créer un compte sans découvert dans la base de données
-	 * 
-	 * @param Multiple
-	 *            : Données correspondant à la création d'un compte sans
-	 *            découvert
+	 *
+     * @param solde
+     *            : le solde du compte à créer
+     * @param numeroCompte
+     *            : le numéro du compte à créer
+     * @param client
+     *            : le client à qui appartient le compte
 	 * @return CompteSansD�ecouvert : l'objet compte qui a été implémenté dans
 	 *         la base. Envoie une exception en cas d'erreur
 	 * @throws TechnicalException
@@ -74,14 +84,14 @@ public interface IDao {
 
 	/**
 	 * Méthode pour récupérer sous forme de hashmap les comptes du client basé
-	 * sur son ID passé en paramêtre. La clé du map correspont au numéro de
+	 * sur son ID passé en paramètre. La clé du map correspond au numéro de
 	 * compte, et les données sont les objets Compte contenant les données
 	 * 
 	 * @param id
 	 *            : String avec l'id de l'utilisateur a qui on veut récupérer la
 	 *            liste des comptes
 	 * @return Map<String, Compte> la liste des comptes du client si l'id passé
-	 *         en paramétre était correct, null sinon
+	 *         en paramètre était correct, null sinon
 	 */
 	Map<String, Compte> getAccountsByClientId(String id);
 
@@ -97,19 +107,30 @@ public interface IDao {
 	Compte getAccountById(String id);
 
 	/**
-	 * Méthode pour créer un utilisateur (Client ou Gestionnaire)
-	 * 
-	 * @param Multiple
-	 *            : Tous les champs importants pour créer un utilisateur
-	 * @throws TechnicalException
-	 *             : Si l'id fourni en paramètre est déjà assigné à un autre
-	 *             utilisateur de la base
-	 * @throws IllegalFormatException 
-	 * @throws IllegalArgumentException 
-	 */
-	Utilisateur createUser(String nom, String prenom, String adresse,
-			boolean male, String usrId, String usrPwd, boolean manager,
-			String numClient) throws TechnicalException, IllegalArgumentException, IllegalFormatException;
+     * Méthode pour créer un utilisateur (Client ou Gestionnaire)
+     *
+     * @param userId  String pour le userId à utiliser
+     *
+     * @param userPwd String pour le password à utiliser
+     *
+     * @param nom     String pour le nom
+     *
+     * @param prenom  String pour le prenom
+     *
+     * @param adresse String pour l'adresse
+     *
+     * @param male    boolean pour savoir si c'est un homme ou une femme
+     *
+     * @param numClient
+     *                String pour le numero de client
+     * @throws TechnicalException       : Si l'id fourni en paramètre est déjà assigné à un autre
+     *                                  utilisateur de la base
+     * @throws IllegalFormatException   : Si le numClient est négatif
+     * @throws IllegalArgumentException : Si l'un des arguments est incorrect
+     */
+	void createUser(String nom, String prenom, String adresse,
+                    boolean male, String userId, String userPwd,
+                    String numClient) throws TechnicalException, IllegalArgumentException, IllegalFormatException;
 
 	/**
 	 * Méthode pour supprimer un utilisateur (Client ou Gestionnaire)
@@ -118,7 +139,7 @@ public interface IDao {
 	 *            : un objet de type Utilisateur (Client ou Gestionnaire)
 	 *            correpondant à celui qu'on veut supprimer
 	 * @throws TechnicalException
-	 *             , si l'user est null ou si l'utilisateur n'est pas un
+	 *             , si le user est null ou si l'utilisateur n'est pas un
 	 *             utilisateur persistant.
 	 */
 	void deleteUser(Utilisateur u) throws TechnicalException;
@@ -146,7 +167,7 @@ public interface IDao {
 	 * @return Boolean : le résultat de la requête. Vrai si les mots de passes
 	 *         correspondent, faux sinon
 	 */
-	public boolean isUserAllowed(String usrId, String usrPwd);
+    boolean isUserAllowed(String userId, String userPwd);
 
 	/**
 	 * Méthode pour récupérer un utilisateur basé sur son identifiant

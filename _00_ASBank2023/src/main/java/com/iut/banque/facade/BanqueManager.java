@@ -14,16 +14,16 @@ import com.iut.banque.modele.CompteAvecDecouvert;
 import com.iut.banque.modele.Gestionnaire;
 import com.iut.banque.modele.Utilisateur;
 
+@SuppressWarnings("unused")
 public class BanqueManager {
 
-	private Banque bank;
+	private final Banque bank;
 	private IDao dao;
 
 	/**
 	 * Constructeur du BanqueManager
-	 * 
-	 * @return BanqueManager : un nouvel objet BanqueManager
-	 */
+	 *
+     */
 	public BanqueManager() {
 		super();
 		// TODO injecter banque par Spring ?
@@ -48,7 +48,7 @@ public class BanqueManager {
 
 	/**
 	 * Setter pour la DAO.
-	 * 
+
 	 * Utilisé par Spring par Injection de Dependence
 	 * 
 	 * @param dao
@@ -139,7 +139,9 @@ public class BanqueManager {
 	 *            Client, objet correspondant à l'objet client auquel on veut
 	 *            rajouter le compte
 	 * @throws TechnicalException
+	 *			Si le numeroCompte est déjà associé à un client existant
 	 * @throws IllegalFormatException
+	 * 			Si le client est null
 	 */
 	public void createAccount(String numeroCompte, Client client) throws TechnicalException, IllegalFormatException {
 		dao.createCompteSansDecouvert(0, numeroCompte, client);
@@ -158,8 +160,11 @@ public class BanqueManager {
 	 *            double correspondant au montant de découvert autorisé pour le
 	 *            nouveau compte
 	 * @throws TechnicalException
+	 * 			Si le numeroCompte est déjà associé à un client existant
 	 * @throws IllegalFormatException
-	 * @throws IllegalOperationException 
+	 * 			Si le decouvertAutorise est négatif
+	 * @throws IllegalOperationException
+	 * 			Si le client existe déjà
 	 */
 	public void createAccount(String numeroCompte, Client client, double decouvertAutorise)
 			throws TechnicalException, IllegalFormatException, IllegalOperationException {
@@ -205,11 +210,13 @@ public class BanqueManager {
 	 *             : Si l'id fourni en paramètre est déjà assigné à un autre
 	 *             utilisateur de la base
 	 * @throws IllegalFormatException
+	 * 			:  Si le format de l'un des paramètres est invalide
 	 * @throws IllegalArgumentException
+	 * 			: Si l'un des paramètres est invalide
 	 */
 	public void createManager(String userId, String userPwd, String nom, String prenom, String adresse, boolean male)
 			throws TechnicalException, IllegalArgumentException, IllegalFormatException {
-		dao.createUser(nom, prenom, adresse, male, userId, userPwd, true, null);
+		dao.createUser(nom, prenom, adresse, male, userId, userPwd,null);
 	}
 
 	/**
@@ -230,11 +237,14 @@ public class BanqueManager {
 	 * @param numeroClient
 	 *            String pour le numero de client
 	 * @throws IllegalOperationException
+	 *			: Si un client avec un numeroClient existe déjà
 	 * @throws TechnicalException
 	 *             : Si l'id fourni en param�tre est déjà assigné à un autre
 	 *             utilisateur de la base
 	 * @throws IllegalFormatException
+	 * 			: Si le format de l'un des paramètres est invalide
 	 * @throws IllegalArgumentException
+	 * 			: Si l'un des paramètres est invalide
 	 */
 	public void createClient(String userId, String userPwd, String nom, String prenom, String adresse, boolean male,
 			String numeroClient)
@@ -246,7 +256,7 @@ public class BanqueManager {
 						"Un client avec le numero de client " + numeroClient + " existe déjà");
 			}
 		}
-		dao.createUser(nom, prenom, adresse, male, userId, userPwd, false, numeroClient);
+		dao.createUser(nom, prenom, adresse, male, userId, userPwd, numeroClient);
 
 	}
 
@@ -256,7 +266,7 @@ public class BanqueManager {
 	 * @param u
 	 *            Utilisateur correspondant à l'objet Utilisateur à supprimer
 	 * @throws TechnicalException
-	 *             si l'user est null ou si l'utilisateur n'est pas un
+	 *             si le user est null ou si l'utilisateur n'est pas un
 	 *             utilisateur persistant.
 	 * @throws IllegalOperationException
 	 *             si le manager à supprimer est le dernier dans la base
@@ -267,10 +277,8 @@ public class BanqueManager {
 			for (Map.Entry<String, Compte> entry : liste.entrySet()) {
 				this.deleteAccount(entry.getValue());
 			}
-		} else if (u instanceof Gestionnaire) {
-			if (bank.getGestionnaires().size() == 1) {
-				throw new IllegalOperationException("Impossible de supprimer le dernier gestionnaire de la banque");
-			}
+		} else if (u instanceof Gestionnaire && bank.getGestionnaires().size() == 1) {
+			throw new IllegalOperationException("Impossible de supprimer le dernier gestionnaire de la banque");
 		}
 		this.bank.deleteUser(u.getUserId());
 		dao.deleteUser(u);
@@ -280,9 +288,13 @@ public class BanqueManager {
 	 * Change le découvert d'un compte
 	 * 
 	 * @param compte
+	 * 			Compte auquel il faut changer le decouvert
 	 * @param nouveauDecouvert
+	 * 			double correspondant au nouveau decouvert
 	 * @throws IllegalFormatException
+	 * 			: Si le nouveauDecouvert est négatif
 	 * @throws IllegalOperationException
+	 * 			: Si le compte est null ou n'existe pas
 	 */
 	public void changeDecouvert(CompteAvecDecouvert compte, double nouveauDecouvert) throws IllegalFormatException, IllegalOperationException {
 		bank.changeDecouvert(compte, nouveauDecouvert);

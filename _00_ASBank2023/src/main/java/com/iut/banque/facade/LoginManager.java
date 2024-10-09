@@ -5,6 +5,7 @@ import com.iut.banque.interfaces.IDao;
 import com.iut.banque.modele.Gestionnaire;
 import com.iut.banque.modele.Utilisateur;
 
+@SuppressWarnings("unused")
 public class LoginManager {
 
 	private IDao dao;
@@ -12,7 +13,7 @@ public class LoginManager {
 
 	/**
 	 * Setter pour la DAO.
-	 * 
+
 	 * Utilisé par Spring par Injection de Dependence
 	 * 
 	 * @param dao
@@ -33,7 +34,7 @@ public class LoginManager {
 	 * @param userPwd
 	 *            : un String correspondant au mot de passe qui doit être
 	 *            confronté avec celui de la base de données
-	 * @return int correspondant aux constantes LoginConstants pour inforer de
+	 * @return int correspondant aux constantes LoginConstants pour informer de
 	 *         l'état du login
 	 */
 	public int tryLogin(String userCde, String userPwd) {

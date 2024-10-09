@@ -4,6 +4,8 @@ package com.iut.banque.exceptions;
  * Exception utilis�e en cas de probl�me "software", quand les acc�s base de
  * donn�es ne fonctionnent pas par exemple
  */
+
+@SuppressWarnings("unused")
 public class TechnicalException extends Exception {
 
 	private static final long serialVersionUID = 1L;
