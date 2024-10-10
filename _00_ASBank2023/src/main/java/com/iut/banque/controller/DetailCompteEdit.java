@@ -40,16 +40,17 @@ public class DetailCompteEdit extends DetailCompte {
 	 * 
 	 * @return le status de l'action
 	 */
+	@SuppressWarnings("unused")
 	public String changementDecouvert() {
 		if (!(getCompte() instanceof CompteAvecDecouvert)) {
 			return "ERROR";
 		}
 		try {
-			Double decouvert = Double.parseDouble(decouvertAutorise);
+			double decouvert = Double.parseDouble(decouvertAutorise);
 			banque.changeDecouvert((CompteAvecDecouvert) getCompte(), decouvert);
 			return "SUCCESS";
 		} catch (NumberFormatException nfe) {
-			nfe.printStackTrace();
+			//nfe.printStackTrace()
 			return "ERROR";
 		} catch (IllegalFormatException e) {
 			return "NEGATIVEOVERDRAFT";

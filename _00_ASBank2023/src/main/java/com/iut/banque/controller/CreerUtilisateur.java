@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 public class CreerUtilisateur extends ActionSupport {
 
 	private static final long serialVersionUID = 1L;
-	private transient BanqueFacade banque;
+	private final transient BanqueFacade banque;
 	private String userId;
 	private String nom;
 	private String prenom;
@@ -136,6 +136,7 @@ public class CreerUtilisateur extends ActionSupport {
 	/**
 	 * @return the numClient
 	 */
+	@SuppressWarnings("unused")
 	public String getNumClient() {
 		return numClient;
 	}
@@ -144,6 +145,7 @@ public class CreerUtilisateur extends ActionSupport {
 	 * @param numClient
 	 *            the numClient to set
 	 */
+	@SuppressWarnings("unused")
 	public void setNumClient(String numClient) {
 		this.numClient = numClient;
 	}
@@ -164,6 +166,7 @@ public class CreerUtilisateur extends ActionSupport {
 	 *
 	 * @return le message de l'action précédente
 	 */
+	@SuppressWarnings("unused")
 	public String getMessage() {
 		return message;
 	}
@@ -171,8 +174,9 @@ public class CreerUtilisateur extends ActionSupport {
 	/**
 	 * Setter du message provenant de l'action précedente.
 	 *
-	 * @param message
+	 * @param message message
 	 */
+	@SuppressWarnings("unused")
 	public void setMessage(String message) {
 		this.message = message;
 	}
@@ -183,6 +187,7 @@ public class CreerUtilisateur extends ActionSupport {
 	 *
 	 * @return le status de l'action précedente.
 	 */
+	@SuppressWarnings("unused")
 	public String getResult() {
 		return result;
 	}
@@ -190,8 +195,9 @@ public class CreerUtilisateur extends ActionSupport {
 	/**
 	 * Setter du result de l'action précedente
 	 *
-	 * @param result
+	 * @param result result
 	 */
+	@SuppressWarnings("unused")
 	public void setResult(String result) {
 		this.result = result;
 	}
@@ -201,6 +207,7 @@ public class CreerUtilisateur extends ActionSupport {
 	 *
 	 * @return String : le status de l'action
 	 */
+	@SuppressWarnings("unused")
 	public String creationUtilisateur() {
 		try {
 			if (client) {

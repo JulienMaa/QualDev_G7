@@ -15,9 +15,7 @@ import com.iut.banque.modele.Compte;
 import com.iut.banque.modele.Utilisateur;
 import java.util.logging.Logger;
 
-
 public class Connect extends ActionSupport {
-
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = Logger.getLogger(Connect.class.getName());
 	private String userCde;
@@ -25,12 +23,11 @@ public class Connect extends ActionSupport {
 	private static final String ERROR = "ERROR";
 	private static final String SUCCESS = "SUCCESS";
 	private static final String SUCCESS_MANAGER = "SUCCESSMANAGER";
-	private transient BanqueFacade banque;
+	private final transient BanqueFacade banque;
 
 	/**
 	 * Constructeur de la classe Connect
-	 *
-	 * @return Un objet de type Connect avec façade BanqueFacade provenant de sa
+	 *  Un objet de type Connect avec façade BanqueFacade provenant de sa
 	 *         factory
 	 */
 	public Connect() {
@@ -48,6 +45,7 @@ public class Connect extends ActionSupport {
 	 * @return String, le resultat du login; "SUCCESS" si réussi, "ERROR" si
 	 *         échec
 	 */
+	@SuppressWarnings("unused")
 	public String login() {
 		logger.info("Essai de login - 20180512...");
 
@@ -60,8 +58,8 @@ public class Connect extends ActionSupport {
 		try {
 			loginResult = banque.tryLogin(userCde, userPwd);
 		} catch (Exception e) {
-			e.printStackTrace();
-			loginResult = LoginConstants.ERROR;
+			//e.printStackTrace()
+ 			loginResult = LoginConstants.ERROR;
 		}
 
 		switch (loginResult) {
@@ -85,6 +83,7 @@ public class Connect extends ActionSupport {
 	 *
 	 * @return String, le userCde de la classe
 	 */
+	@SuppressWarnings("unused")
 	public String getUserCde() {
 		return userCde;
 	}
@@ -95,6 +94,7 @@ public class Connect extends ActionSupport {
 	 * @param userCde
 	 *            : String correspondant au userCode à établir
 	 */
+	@SuppressWarnings("unused")
 	public void setUserCde(String userCde) {
 		this.userCde = userCde;
 	}
@@ -124,6 +124,7 @@ public class Connect extends ActionSupport {
 	 *
 	 * @return Utilisateur, l'utilisateur de la classe
 	 */
+	@SuppressWarnings("unused")
 	public Utilisateur getConnectedUser() {
 		return banque.getConnectedUser();
 	}
@@ -135,6 +136,7 @@ public class Connect extends ActionSupport {
 	 * @return Map<String, Compte> correspondant à l'ID du compte et l'objet
 	 *         Compte associé
 	 */
+	@SuppressWarnings("unused")
 	public Map<String, Compte> getAccounts() {
 		return ((Client) banque.getConnectedUser()).getAccounts();
 	}

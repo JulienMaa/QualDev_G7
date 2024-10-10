@@ -24,7 +24,7 @@ public class CreerCompte extends ActionSupport {
 	private String message;
 	private boolean error;
 	private boolean result;
-	private transient BanqueFacade banque;
+	private final transient BanqueFacade banque;
 	private transient Compte compte;
 	private static final Logger logger = Logger.getLogger(CreerCompte.class.getName());
 
@@ -62,7 +62,7 @@ public class CreerCompte extends ActionSupport {
 	/**
 	 * Setter de l'action précédente
 	 *
-	 * @param error
+	 * @param error erreur boollean
 	 */
 	public void setError(boolean error) {
 		this.error = error;
@@ -104,6 +104,7 @@ public class CreerCompte extends ActionSupport {
 	/**
 	 * @return the avecDecouvert
 	 */
+	@SuppressWarnings("unused")
 	public boolean isAvecDecouvert() {
 		return avecDecouvert;
 	}
@@ -112,6 +113,7 @@ public class CreerCompte extends ActionSupport {
 	 * @param avecDecouvert
 	 *            the avecDecouvert to set
 	 */
+	@SuppressWarnings("unused")
 	public void setAvecDecouvert(boolean avecDecouvert) {
 		this.avecDecouvert = avecDecouvert;
 	}
@@ -136,6 +138,7 @@ public class CreerCompte extends ActionSupport {
 	 *
 	 * @return le message
 	 */
+	@SuppressWarnings("unused")
 	public String getMessage() {
 		return message;
 	}
@@ -146,6 +149,7 @@ public class CreerCompte extends ActionSupport {
 	 * @param message
 	 *            : le message indiquant le status de l'action précédente.
 	 */
+	@SuppressWarnings("unused")
 	public void setMessage(String message) {
 		switch (message) {
 		case "NONUNIQUEID":
@@ -170,6 +174,7 @@ public class CreerCompte extends ActionSupport {
 	 *
 	 * @return le status de l'action précédente
 	 */
+	@SuppressWarnings("unused")
 	public boolean isResult() {
 		return result;
 	}
@@ -180,6 +185,7 @@ public class CreerCompte extends ActionSupport {
 	 * @param result
 	 *            : le status
 	 */
+	@SuppressWarnings("unused")
 	public void setResult(boolean result) {
 		this.result = result;
 	}
@@ -189,6 +195,7 @@ public class CreerCompte extends ActionSupport {
 	 *
 	 * @return une chaine déterminant le résultat de l'action
 	 */
+	@SuppressWarnings("unused")
 	public String creationCompte() {
 		try {
 			if (avecDecouvert) {
@@ -199,13 +206,13 @@ public class CreerCompte extends ActionSupport {
 			this.compte = banque.getCompte(numeroCompte);
 			return "SUCCESS";
 		}catch (IllegalOperationException e) {
-			e.printStackTrace();
+			//e.printStackTrace()
 			return "ILLEGALOPERATION";
 		} catch (TechnicalException e) {
-			e.printStackTrace();
+			//e.printStackTrace()
 			return "NONUNIQUEID";
 		} catch (IllegalFormatException e) {
-			e.printStackTrace();
+			//e.printStackTrace()
 			return "INVALIDFORMAT";
 		}
 	}

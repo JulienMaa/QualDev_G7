@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 public class DetailCompte extends ActionSupport {
 
 	private static final long serialVersionUID = 1L;
-	protected transient BanqueFacade banque;
+	protected final transient BanqueFacade banque;
 	private String montant;
 	private String error;
 	protected transient Compte compte;
@@ -31,10 +31,8 @@ public class DetailCompte extends ActionSupport {
 
 	/**
 	 * Constructeur du controlleur DetailCompte
-	 *
 	 * Récupère l'ApplicationContext
-	 *
-	 * @return un nouvel objet DetailCompte avec une BanqueFacade provenant de
+	 *  un nouvel objet DetailCompte avec une BanqueFacade provenant de
 	 *         la factory
 	 */
 	public DetailCompte() {
@@ -137,19 +135,20 @@ public class DetailCompte extends ActionSupport {
 	 * @return String : Message correspondant à l'état du débit (si il a réussi
 	 *         ou pas)
 	 */
+	@SuppressWarnings("unused")
 	public String debit() {
-		Compte compte = getCompte();
+		Compte compteDebit = getCompte();
 		try {
-			banque.debiter(compte, Double.parseDouble(montant.trim()));
+			banque.debiter(compteDebit, Double.parseDouble(montant.trim()));
 			return SUCCESS;
 		} catch (NumberFormatException e) {
-			e.printStackTrace();
+			//e.printStackTrace()
 			return ERROR;
 		} catch (InsufficientFundsException ife) {
-			ife.printStackTrace();
+			//ife.printStackTrace()
 			return NOTENOUGH_FUNDS;
 		} catch (IllegalFormatException e) {
-			e.printStackTrace();
+			//e.printStackTrace()
 			return NEGATIVE_AMOUNT_ERROR;
 		}
 	}
@@ -160,16 +159,17 @@ public class DetailCompte extends ActionSupport {
 	 * @return String : Message correspondant à l'état du crédit (si il a réussi
 	 *         ou pas)
 	 */
+	@SuppressWarnings("unused")
 	public String credit() {
-		Compte compte = getCompte();
+		Compte compteCredit = getCompte();
 		try {
-			banque.crediter(compte, Double.parseDouble(montant.trim()));
+			banque.crediter(compteCredit, Double.parseDouble(montant.trim()));
 			return SUCCESS;
 		} catch (NumberFormatException nfe) {
-			nfe.printStackTrace();
+			//nfe.printStackTrace()
 			return ERROR;
 		} catch (IllegalFormatException e) {
-			e.printStackTrace();
+			//e.printStackTrace()
 			return NEGATIVE_AMOUNT_ERROR;
 		}
 	}
