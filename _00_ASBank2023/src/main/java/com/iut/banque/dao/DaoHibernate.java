@@ -148,7 +148,7 @@ public class DaoHibernate implements IDao {
      */
 	@Override
 	public void createUser(String nom, String prenom, String adresse, boolean male, String userId,
-                           String userPwd, String numClient)
+						   String userPwd, boolean manager, String numClient)
 			throws TechnicalException, IllegalArgumentException, IllegalFormatException {
 		Session session = sessionFactory.getCurrentSession();
 
@@ -157,7 +157,7 @@ public class DaoHibernate implements IDao {
 			throw new TechnicalException("User Id déjà utilisé.");
 		}
 
-		if (numClient == null) {
+		if (manager) {
 			user = new Gestionnaire(nom, prenom, adresse, male, userId, userPwd);
 		} else {
 			user = new Client(nom, prenom, adresse, male, userId, userPwd, numClient);

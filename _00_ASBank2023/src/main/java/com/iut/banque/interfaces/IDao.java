@@ -128,9 +128,9 @@ public interface IDao {
      * @throws IllegalFormatException   : Si le numClient est négatif
      * @throws IllegalArgumentException : Si l'un des arguments est incorrect
      */
-	void createUser(String nom, String prenom, String adresse,
-                    boolean male, String userId, String userPwd,
-                    String numClient) throws TechnicalException, IllegalArgumentException, IllegalFormatException;
+	void createUser(String nom, String prenom, String adresse, boolean male, String userId,
+					String userPwd, boolean manager, String numClient)
+			throws TechnicalException, IllegalArgumentException, IllegalFormatException;
 
 	/**
 	 * Méthode pour supprimer un utilisateur (Client ou Gestionnaire)

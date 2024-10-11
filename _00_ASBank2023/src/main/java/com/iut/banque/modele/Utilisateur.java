@@ -178,6 +178,7 @@ public abstract class Utilisateur {
 	 * @param userPwd
 	 */
 	protected Utilisateur(String nom, String prenom, String adresse, boolean male, String userId, String userPwd) {
+		// TODO ajouter un builder
 		super();
 		this.nom = nom;
 		this.prenom = prenom;

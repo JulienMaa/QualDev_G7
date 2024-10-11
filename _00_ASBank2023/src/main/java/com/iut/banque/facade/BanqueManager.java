@@ -216,7 +216,7 @@ public class BanqueManager {
 	 */
 	public void createManager(String userId, String userPwd, String nom, String prenom, String adresse, boolean male)
 			throws TechnicalException, IllegalArgumentException, IllegalFormatException {
-		dao.createUser(nom, prenom, adresse, male, userId, userPwd,null);
+		dao.createUser(nom, prenom, adresse, male, userId, userPwd,true, null);
 	}
 
 	/**
@@ -256,7 +256,7 @@ public class BanqueManager {
 						"Un client avec le numero de client " + numeroClient + " existe déjà");
 			}
 		}
-		dao.createUser(nom, prenom, adresse, male, userId, userPwd, numeroClient);
+		dao.createUser(nom, prenom, adresse, male, userId, userPwd, false, numeroClient);
 
 	}
 
