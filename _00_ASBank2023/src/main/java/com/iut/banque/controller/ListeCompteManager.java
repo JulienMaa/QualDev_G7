@@ -13,25 +13,26 @@ import com.iut.banque.exceptions.TechnicalException;
 import com.iut.banque.facade.BanqueFacade;
 import com.iut.banque.modele.Client;
 import com.iut.banque.modele.Compte;
+import java.util.logging.Logger;
 
 public class ListeCompteManager extends ActionSupport {
 
 	private static final long serialVersionUID = 1L;
-	private BanqueFacade banque;
+	private final transient BanqueFacade banque;
 	private boolean aDecouvert;
-	private Compte compte;
-	private Client client;
+	private transient Compte compte;
+	private transient Client client;
 	private String userInfo;
 	private String compteInfo;
+	private static final Logger logger = Logger.getLogger(ListeCompteManager.class.getName());
 
 	/**
 	 * Constructeur de la classe Connect
-	 * 
-	 * @return Un objet de type Connect avec façade BanqueFacade provenant de sa
+	 *  Un objet de type Connect avec façade BanqueFacade provenant de sa
 	 *         factory
 	 */
 	public ListeCompteManager() {
-		System.out.println("In Constructor from ListeCompteManager class ");
+		logger.info("In Constructor from ListeCompteManager class ");
 		ApplicationContext context = WebApplicationContextUtils
 				.getRequiredWebApplicationContext(ServletActionContext.getServletContext());
 		this.banque = (BanqueFacade) context.getBean("banqueFacade");
@@ -43,6 +44,7 @@ public class ListeCompteManager extends ActionSupport {
 	 * 
 	 * @return Map<String,Client> : la hashmap correspondant au résultat
 	 */
+	@SuppressWarnings("unused")
 	public Map<String, Client> getAllClients() {
 		banque.loadClients();
 		return banque.getAllClients();
@@ -53,6 +55,7 @@ public class ListeCompteManager extends ActionSupport {
 	 * 
 	 * @return boolean : la valeur du champ aDecouvert
 	 */
+	@SuppressWarnings("unused")
 	public boolean isaDecouvert() {
 		return aDecouvert;
 	}
@@ -63,6 +66,7 @@ public class ListeCompteManager extends ActionSupport {
 	 * @param aDecouvert
 	 *            : la valeur de ce qu'on veut définir
 	 */
+	@SuppressWarnings("unused")
 	public void setaDecouvert(boolean aDecouvert) {
 		this.aDecouvert = aDecouvert;
 	}
@@ -100,6 +104,7 @@ public class ListeCompteManager extends ActionSupport {
 	/**
 	 * @return the userInfo
 	 */
+	@SuppressWarnings("unused")
 	public String getUserInfo() {
 		return userInfo;
 	}
@@ -115,6 +120,7 @@ public class ListeCompteManager extends ActionSupport {
 	/**
 	 * @return the userInfo
 	 */
+	@SuppressWarnings("unused")
 	public String getCompteInfo() {
 		return compteInfo;
 	}
@@ -138,10 +144,10 @@ public class ListeCompteManager extends ActionSupport {
 			banque.deleteUser(client);
 			return "SUCCESS";
 		} catch (TechnicalException e) {
-			e.printStackTrace();
+			//e.printStackTrace()
 			return "ERROR";
 		} catch (IllegalOperationException ioe) {
-			ioe.printStackTrace();
+			//ioe.printStackTrace()
 			return "NONEMPTYACCOUNT";
 		}
 	}
@@ -151,16 +157,17 @@ public class ListeCompteManager extends ActionSupport {
 	 * 
 	 * @return String, le status de l'opération
 	 */
+	@SuppressWarnings("unused")
 	public String deleteAccount() {
 		try {
 			setCompteInfo(compte.getNumeroCompte());
 			banque.deleteAccount(compte);
 			return "SUCCESS";
 		} catch (IllegalOperationException e) {
-			e.printStackTrace();
+			//e.printStackTrace()
 			return "NONEMPTYACCOUNT";
 		} catch (TechnicalException e) {
-			e.printStackTrace();
+			//e.printStackTrace()
 			return "ERROR";
 		}
 	}
