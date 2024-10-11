@@ -1,7 +1,6 @@
 package com.iut.banque.modele;
 
 import java.util.Map;
-import java.util.HashMap;
 
 import com.iut.banque.exceptions.IllegalFormatException;
 import com.iut.banque.exceptions.IllegalOperationException;
@@ -14,10 +13,6 @@ public class Banque {
 	private Map<String, Compte> accounts;
 
 	public Banque() {
-		// Initialize the maps
-		this.clients = new HashMap<>();
-		this.gestionnaires = new HashMap<>();
-		this.accounts = new HashMap<>();
 	}
 
 	/**

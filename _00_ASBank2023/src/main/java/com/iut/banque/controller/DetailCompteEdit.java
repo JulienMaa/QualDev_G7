@@ -3,21 +3,19 @@ package com.iut.banque.controller;
 import com.iut.banque.exceptions.IllegalFormatException;
 import com.iut.banque.exceptions.IllegalOperationException;
 import com.iut.banque.modele.CompteAvecDecouvert;
-import java.util.logging.Logger;
 
 public class DetailCompteEdit extends DetailCompte {
 
 	private static final long serialVersionUID = 1L;
 	private String decouvertAutorise;
-	private static final Logger logger = Logger.getLogger(DetailCompteEdit.class.getName());
 
 	/**
 	 * Constructeur sans argument de DetailCompteEdit
 	 */
 	public DetailCompteEdit() {
 		super();
-		logger.info("======================================");
-		logger.info("Dans le constructeur DetailCompteEdit");
+		System.out.println("======================================");
+		System.out.println("Dans le constructeur DetailCompteEdit");
 	}
 
 	/**
@@ -40,17 +38,16 @@ public class DetailCompteEdit extends DetailCompte {
 	 * 
 	 * @return le status de l'action
 	 */
-	@SuppressWarnings("unused")
 	public String changementDecouvert() {
 		if (!(getCompte() instanceof CompteAvecDecouvert)) {
 			return "ERROR";
 		}
 		try {
-			double decouvert = Double.parseDouble(decouvertAutorise);
+			Double decouvert = Double.parseDouble(decouvertAutorise);
 			banque.changeDecouvert((CompteAvecDecouvert) getCompte(), decouvert);
 			return "SUCCESS";
 		} catch (NumberFormatException nfe) {
-			//nfe.printStackTrace()
+			nfe.printStackTrace();
 			return "ERROR";
 		} catch (IllegalFormatException e) {
 			return "NEGATIVEOVERDRAFT";

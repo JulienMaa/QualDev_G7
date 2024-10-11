@@ -12,7 +12,6 @@ import com.iut.banque.exceptions.TechnicalException;
 import com.iut.banque.facade.BanqueFacade;
 import com.iut.banque.modele.Client;
 import com.iut.banque.modele.Compte;
-import java.util.logging.Logger;
 
 public class CreerCompte extends ActionSupport {
 
@@ -20,13 +19,12 @@ public class CreerCompte extends ActionSupport {
 	private String numeroCompte;
 	private boolean avecDecouvert;
 	private double decouvertAutorise;
-	private transient Client client;
+	private Client client;
 	private String message;
 	private boolean error;
 	private boolean result;
-	private final transient BanqueFacade banque;
-	private transient Compte compte;
-	private static final Logger logger = Logger.getLogger(CreerCompte.class.getName());
+	private BanqueFacade banque;
+	private Compte compte;
 
 	/**
 	 * @param compte
@@ -52,7 +50,7 @@ public class CreerCompte extends ActionSupport {
 
 	/**
 	 * Indique si le résultat de l'action précedente avait réussi
-	 *
+	 * 
 	 * @return le status de l'action précédente
 	 */
 	public boolean isError() {
@@ -61,8 +59,8 @@ public class CreerCompte extends ActionSupport {
 
 	/**
 	 * Setter de l'action précédente
-	 *
-	 * @param error erreur boollean
+	 * 
+	 * @param error
 	 */
 	public void setError(boolean error) {
 		this.error = error;
@@ -80,7 +78,7 @@ public class CreerCompte extends ActionSupport {
 	 * Constructeur sans paramêtre de CreerCompte
 	 */
 	public CreerCompte() {
-		logger.info("In Constructor from CreerCompte class ");
+		System.out.println("In Constructor from CreerCompte class ");
 		ApplicationContext context = WebApplicationContextUtils
 				.getRequiredWebApplicationContext(ServletActionContext.getServletContext());
 		this.banque = (BanqueFacade) context.getBean("banqueFacade");
@@ -104,7 +102,6 @@ public class CreerCompte extends ActionSupport {
 	/**
 	 * @return the avecDecouvert
 	 */
-	@SuppressWarnings("unused")
 	public boolean isAvecDecouvert() {
 		return avecDecouvert;
 	}
@@ -113,7 +110,6 @@ public class CreerCompte extends ActionSupport {
 	 * @param avecDecouvert
 	 *            the avecDecouvert to set
 	 */
-	@SuppressWarnings("unused")
 	public void setAvecDecouvert(boolean avecDecouvert) {
 		this.avecDecouvert = avecDecouvert;
 	}
@@ -135,21 +131,19 @@ public class CreerCompte extends ActionSupport {
 
 	/**
 	 * Getter du message résultant de l'action précédente.
-	 *
+	 * 
 	 * @return le message
 	 */
-	@SuppressWarnings("unused")
 	public String getMessage() {
 		return message;
 	}
 
 	/**
 	 * Choisi le message à enregistrer en fonction du message reçu en paramêtre.
-	 *
+	 * 
 	 * @param message
 	 *            : le message indiquant le status de l'action précédente.
 	 */
-	@SuppressWarnings("unused")
 	public void setMessage(String message) {
 		switch (message) {
 		case "NONUNIQUEID":
@@ -161,9 +155,6 @@ public class CreerCompte extends ActionSupport {
 		case "SUCCESS":
 			this.message = "Le compte " + compte.getNumeroCompte() + " a bien été créé.";
 			break;
-		default:
-			this.message = "Message inconnu : " + message;
-			break;
 		}
 	}
 
@@ -171,49 +162,46 @@ public class CreerCompte extends ActionSupport {
 	 * Getter du status de l'action précédente. Si vrai, indique qu'une création
 	 * de compte a déjà été essayée (elle peut avoir réussi ou non). Sinon, le
 	 * client vient d'arriver sur la page.
-	 *
+	 * 
 	 * @return le status de l'action précédente
 	 */
-	@SuppressWarnings("unused")
 	public boolean isResult() {
 		return result;
 	}
 
 	/**
 	 * Setter du status de l'action précédente.
-	 *
+	 * 
 	 * @param result
 	 *            : le status
 	 */
-	@SuppressWarnings("unused")
 	public void setResult(boolean result) {
 		this.result = result;
 	}
 
 	/**
 	 * Action créant un compte client ou gestionnaire.
-	 *
+	 * 
 	 * @return une chaine déterminant le résultat de l'action
 	 */
-	@SuppressWarnings("unused")
 	public String creationCompte() {
 		try {
 			if (avecDecouvert) {
-				banque.createAccount(numeroCompte, client, decouvertAutorise);
+				try {
+					banque.createAccount(numeroCompte, client, decouvertAutorise);
+				} catch (IllegalOperationException e) {
+					e.printStackTrace();
+				}
 			} else {
 				banque.createAccount(numeroCompte, client);
 			}
 			this.compte = banque.getCompte(numeroCompte);
 			return "SUCCESS";
-		}catch (IllegalOperationException e) {
-			//e.printStackTrace()
-			return "ILLEGALOPERATION";
 		} catch (TechnicalException e) {
-			//e.printStackTrace()
 			return "NONUNIQUEID";
 		} catch (IllegalFormatException e) {
-			//e.printStackTrace()
 			return "INVALIDFORMAT";
 		}
+
 	}
 }

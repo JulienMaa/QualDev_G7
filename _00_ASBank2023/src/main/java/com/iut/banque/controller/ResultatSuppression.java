@@ -8,8 +8,8 @@ import com.iut.banque.modele.Compte;
 public class ResultatSuppression extends ActionSupport {
 
 	private static final long serialVersionUID = 1L;
-	private transient Compte compte;
-	private transient Client client;
+	private Compte compte;
+	private Client client;
 	private String compteInfo;
 	private String userInfo;
 	private boolean error;
@@ -19,7 +19,6 @@ public class ResultatSuppression extends ActionSupport {
 	/**
 	 * @return the isAccount
 	 */
-	@SuppressWarnings("unused")
 	public boolean isAccount() {
 		return isAccount;
 	}
@@ -28,7 +27,6 @@ public class ResultatSuppression extends ActionSupport {
 	 * @param isAccount
 	 *            the isAccount to set
 	 */
-	@SuppressWarnings("unused")
 	public void setAccount(boolean isAccount) {
 		this.isAccount = isAccount;
 	}
@@ -66,7 +64,6 @@ public class ResultatSuppression extends ActionSupport {
 	/**
 	 * @return the compteInfo
 	 */
-	@SuppressWarnings("unused")
 	public String getCompteInfo() {
 		return compteInfo;
 	}
@@ -75,7 +72,6 @@ public class ResultatSuppression extends ActionSupport {
 	 * @param compteInfo
 	 *            the compteInfo to set
 	 */
-	@SuppressWarnings("unused")
 	public void setCompteInfo(String compteInfo) {
 		this.compteInfo = compteInfo;
 	}
@@ -83,7 +79,6 @@ public class ResultatSuppression extends ActionSupport {
 	/**
 	 * @return the userInfo
 	 */
-	@SuppressWarnings("unused")
 	public String getUserInfo() {
 		return userInfo;
 	}
@@ -92,7 +87,6 @@ public class ResultatSuppression extends ActionSupport {
 	 * @param userInfo
 	 *            the userInfo to set
 	 */
-	@SuppressWarnings("unused")
 	public void setUserInfo(String userInfo) {
 		this.userInfo = userInfo;
 	}
@@ -100,7 +94,6 @@ public class ResultatSuppression extends ActionSupport {
 	/**
 	 * @return the errorMessage
 	 */
-	@SuppressWarnings("unused")
 	public String getErrorMessage() {
 		return errorMessage;
 	}
@@ -109,9 +102,8 @@ public class ResultatSuppression extends ActionSupport {
 	 * @param errorMessage
 	 *            the errorMessage to set
 	 */
-	@SuppressWarnings("unused")
 	public void setErrorMessage(String errorMessage) {
-		setError(!(errorMessage == null || errorMessage.isEmpty()));
+		setError(!(errorMessage == null || errorMessage.equals("")));
 		this.errorMessage = errorMessage;
 	}
 
@@ -123,7 +115,7 @@ public class ResultatSuppression extends ActionSupport {
 	}
 
 	/**
-	 * @param error erreur
+	 * @param error
 	 */
 	public void setError(boolean error) {
 		this.error = error;
