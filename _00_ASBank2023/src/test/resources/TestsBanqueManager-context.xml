@@ -53,10 +53,13 @@
 		class="org.springframework.orm.hibernate5.HibernateTransactionManager">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
-	<!-- Injection de la Dao dans le BankManager par le setter -->
+
+	<!-- Objet Banque -->
+	<bean id="banque" class="com.iut.banque.modele.Banque" />
+
+	<!-- Injection de l'objet Banque et de la Dao dans le BankManager par les setter -->
 	<bean id="banqueManager" class="com.iut.banque.facade.BanqueManager">
+		<property name="bank" ref="banque" />
 		<property name="dao" ref="daoHibernate" />
 	</bean>
-	
-	
 </beans>

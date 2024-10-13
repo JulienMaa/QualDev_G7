@@ -27,32 +27,21 @@ public class AccountConverter extends StrutsTypeConverter {
 	/**
 	 * DAO utilisée pour récupérer les objets correspondants à l'id passé en
 	 * paramètre de convertFromString.
-
-	 * Note : Ce champ est static car pour une raison qui nous échappe, le scope
-	 * « singleton » du bean Spring utilisé pour l'injection n'est pas respecté.
-	 * Ainsi, au chargement de l'application, trois objets de cette classe sont
-	 * instanciés et seulement le premier a une DAO injectée correctement.
 	 */
-	private IDao dao;
+	private final IDao dao;
 
 	/**
 	 * Constructeur avec paramètre pour le AccountConverter.
 
 	 * Utilisé pour l'injection de dépendance.
 	 *
+	 * @param dao
+	 * 			la dao nécessaire pour AccountConverter
 	 */
 	public AccountConverter(IDao dao) {
 		logger.info("=========================");
 		logger.info("Création du convertisseur de compte");
 		this.dao = dao;
-	}
-
-	/**
-	 * 	Constructeur sans paramètre pour le AccountConverter
-	 */
-	public AccountConverter() {
-		logger.info("=========================");
-		logger.info("Création du convertisseur de compte");
 	}
 
 	/**

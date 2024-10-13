@@ -27,13 +27,8 @@ public class ClientConverter extends StrutsTypeConverter {
 	/**
 	 * DAO utilisée pour récupérer les objets correspondants à l'id passé en
 	 * paramètre de convertFromString.
-
-	 * Note : Ce champ est static car pour une raison qui nous échappe, le scope
-	 * « singleton » du bean Spring utilisé pour l'injection n'est pas respecté.
-	 * Ainsi, au chargement de l'application, trois objets de cette classe sont
-	 * instanciés et seulement le premier a une DAO injectée correctement.
 	 */
-	private IDao dao;
+	private final IDao dao;
 
 	/**
 	 * Constructeur avec paramètre pour le ClientConverter.
@@ -41,20 +36,12 @@ public class ClientConverter extends StrutsTypeConverter {
 	 * Utilisé pour l'injection de dépendance.
 	 * 
 	 * @param dao
-	 * 			Idao
+	 * 			la dao nécessaire pour LoginConverter
 	 */
 	public ClientConverter(IDao dao) {
 		logger.info("=========================");
 		logger.info("Création du convertisseur de client");
 		this.dao = dao;
-	}
-
-	/**
-	 * Constructeur sans paramètre pour le ClientConverter
-	 */
-	public ClientConverter() {
-		logger.info("=========================");
-		logger.info("Création du convertisseur de client");
 	}
 
 	/**

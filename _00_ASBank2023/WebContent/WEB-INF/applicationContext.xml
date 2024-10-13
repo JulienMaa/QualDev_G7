@@ -19,15 +19,14 @@
 
 	<!-- La DAO. Utilise la balise <property> qui signifie que l'injection est 
 		faite par un setter (et non par un argument du constructeur). -->
-	<bean id="daoHibernate" class="com.iut.banque.dao.DaoHibernate"
-		scope="singleton">
+	<bean id="daoHibernate" class="com.iut.banque.dao.DaoHibernate">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<!-- La session factory. Utilise Hibernate. Il est possible d'utiliser <property 
 		name="annotatedClasses"> avec une liste de classes au lieu de <property name="packagesToScan" 
 		value="com.iut.banque.modele" /> -->
-	<bean id="sessionFactory" scope="singleton"
+	<bean id="sessionFactory"
 		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<property name="hibernateProperties">
@@ -41,7 +40,7 @@
 
 	<!-- La source de donnée utilisée en production. Contient les infos de base 
 		de la connection -->
-	<bean id="dataSource" scope="singleton"
+	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName"
 			value="com.mysql.jdbc.Driver" />
@@ -65,14 +64,18 @@
 
 	<!-- ============= Modele ============= -->
 
+    <!-- Objet Banque -->
+    <bean id="banque" class="com.iut.banque.modele.Banque" />
+
 	<!-- Injection des managers dans la facade par le constructor -->
 	<bean id="banqueFacade" class="com.iut.banque.facade.BanqueFacade">
 		<constructor-arg ref="loginManager" />
 		<constructor-arg ref="banqueManager" />
 	</bean>
 
-	<!-- Injection de la Dao dans le BankManager par le setter -->
+	<!-- Injection de l'objet Banque et de la Dao dans le BankManager par les setter -->
 	<bean id="banqueManager" class="com.iut.banque.facade.BanqueManager">
+        <property name="bank" ref="banque" />
 		<property name="dao" ref="daoHibernate" />
 	</bean>
 
@@ -85,13 +88,13 @@
 
 	<!-- Injection de la Dao dans le ClientConverter par le constructeur -->
 	<bean id="clientConverter"
-		class="com.iut.banque.converter.ClientConverter" scope="singleton">
+		class="com.iut.banque.converter.ClientConverter">
 		<constructor-arg ref="daoHibernate" />
 	</bean>
 
 	<!-- Injection de la Dao dans le AccountConverter par le constructeur -->
 	<bean id="accountConverter"
-		class="com.iut.banque.converter.AccountConverter" scope="singleton">
+		class="com.iut.banque.converter.AccountConverter">
 		<constructor-arg ref="daoHibernate" />
 	</bean>
 </beans>
