@@ -16,10 +16,10 @@ import com.iut.banque.facade.BanqueManager;
 @RunWith(SpringJUnit4ClassRunner.class)
 // @ContextConfiguration permet de charger le context utilisé pendant les tests.
 // Par défault (si aucun argument n'est précisé), cherche le fichier
-/// src/com/iut/banque/test/TestsDaoHibernate-context.xml
-@ContextConfiguration("/test/resources/TestsBanqueManager-context.xml")
+/// src/com/iut/banque/test/DaoHibernateTest-context.xml
+@ContextConfiguration("classpath:BanqueManagerTest-context.xml")
 @Transactional("transactionManager")
-public class TestsBanqueManager {
+public class BanqueManagerTest {
 
 	@Autowired
 	private BanqueManager bm;
