@@ -14,7 +14,7 @@ import com.iut.banque.modele.CompteSansDecouvert;
 /**
  * Tests en rapport avec la méthode "créditer" de la classe Banque
  */
-public class TestsCompte {
+public class CompteTest {
 
 	private Compte compte;
 
