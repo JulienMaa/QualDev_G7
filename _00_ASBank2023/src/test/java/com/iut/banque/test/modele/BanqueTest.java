@@ -42,7 +42,7 @@ public class BanqueTest {
     public void testDebiterCompte() throws IllegalFormatException, InsufficientFundsException {
         double montantDebit = 200.0;
         banque.debiter(compteAvecDecouvert, montantDebit);
-        assertEquals(800.0, compteAvecDecouvert.getSolde(), 0.001);
+        assertEquals(-100.0, compteAvecDecouvert.getSolde(), 0.001);
     }
 
     @Test(expected = InsufficientFundsException.class)
@@ -54,7 +54,7 @@ public class BanqueTest {
     public void testCrediterCompte() throws IllegalFormatException {
         double montantCredit = 300.0;
         banque.crediter(compteAvecDecouvert, montantCredit);
-        assertEquals(1300.0, compteAvecDecouvert.getSolde(), 0.001);
+        assertEquals(400.0, compteAvecDecouvert.getSolde(), 0.001);
     }
 
     @Test
