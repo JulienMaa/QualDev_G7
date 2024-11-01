@@ -160,9 +160,9 @@ public class DaoHibernateTest {
 		try {
 			daoHibernate.updateAccount(account);
 			fail("Le compte n'aurait pas du être mis à jour.");
-		} catch (IllegalArgumentException e) {
-			assertNotNull(e);
-		}
+		} catch (IllegalArgumentException ignored) {
+            // Une exception est attendue.
+        }
 	}
 
 	@Test
@@ -188,9 +188,9 @@ public class DaoHibernateTest {
 		try {
 			daoHibernate.deleteAccount(account);
 			fail("Le compte n'aurait pas du être supprimé.");
-		} catch (TechnicalException e) {
-            assertNotNull(e);
-		}
+		} catch (TechnicalException ignored) {
+            // Une exception est attendue.
+        }
 	}
 
 	@Test
@@ -346,9 +346,9 @@ public class DaoHibernateTest {
 		try {
 			daoHibernate.updateUser(user);
 			fail("L'utilisateur n'aurait pas du être mis à jour.");
-		} catch (IllegalArgumentException e) {
-			assertNotNull(e);
-		}
+		} catch (IllegalArgumentException ignored) {
+            // Une exception est attendue.
+        }
 	}
 
 	@Test
@@ -374,9 +374,9 @@ public class DaoHibernateTest {
 		try {
 			daoHibernate.deleteUser(user);
 			fail("L'utilisateur n'aurait pas du être supprimé.");
-		} catch (TechnicalException e) {
-			assertNotNull(e);
-		}
+		} catch (TechnicalException ignored) {
+            // Une exception est attendue.
+        }
 	}
 
 	@Test
