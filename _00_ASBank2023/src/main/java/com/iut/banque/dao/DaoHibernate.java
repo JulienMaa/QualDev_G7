@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Transactional;
+import org.mindrot.jbcrypt.BCrypt;
 
 import com.iut.banque.exceptions.IllegalFormatException;
 import com.iut.banque.exceptions.IllegalOperationException;
@@ -196,6 +197,7 @@ public class DaoHibernate implements IDao {
 			return false;
 		} else {
 			userId = userId.trim();
+			userPwd = userPwd.trim();
 			if (userId.isEmpty() || userPwd.isEmpty()) {
 				return false;
 			} else {
@@ -204,7 +206,8 @@ public class DaoHibernate implements IDao {
 				if (user == null) {
 					return false;
 				}
-				return (userPwd.equals(user.getUserPwd()));
+
+				return BCrypt.checkpw(userPwd, user.getUserPwd());
 			}
 		}
 	}

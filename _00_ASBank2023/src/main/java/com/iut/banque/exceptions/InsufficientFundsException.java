@@ -6,7 +6,6 @@ package com.iut.banque.exceptions;
  * d�passant le d�couvert autoris� par exemple)
  */
 
-@SuppressWarnings("unused")
 public class InsufficientFundsException extends Exception {
 
 	private static final long serialVersionUID = 1L;

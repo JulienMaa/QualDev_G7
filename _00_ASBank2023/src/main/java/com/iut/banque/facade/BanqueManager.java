@@ -17,7 +17,7 @@ import com.iut.banque.modele.Utilisateur;
 @SuppressWarnings("unused")
 public class BanqueManager {
 
-	private final Banque bank;
+	private Banque bank;
 	private IDao dao;
 
 	/**
@@ -26,8 +26,6 @@ public class BanqueManager {
      */
 	public BanqueManager() {
 		super();
-		// TODO injecter banque par Spring ?
-		bank = new Banque();
 	}
 
 	/**
@@ -45,6 +43,18 @@ public class BanqueManager {
 	public Utilisateur getUserById(String id) {
 		return dao.getUserById(id);
 	}
+
+    /**
+     * Setter pour bank.
+
+     * Utilisé par Spring par Injection de Dependence
+     *
+     * @param bank
+     *            : l'objet Banque nécessaire pour le BanqueManager
+     */
+    public void setBank(Banque bank) {
+        this.bank = bank;
+    }
 
 	/**
 	 * Setter pour la DAO.

@@ -7,26 +7,34 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.iut.banque.exceptions.IllegalFormatException;
+import com.iut.banque.exceptions.IllegalOperationException;
 import com.iut.banque.exceptions.InsufficientFundsException;
 import com.iut.banque.modele.Client;
-import com.iut.banque.modele.CompteSansDecouvert;
+import com.iut.banque.modele.CompteAvecDecouvert;
 
-public class TestsCompteSansDecouvert {
+public class CompteAvecDecouvertTest {
 
-	private CompteSansDecouvert compte;
+	private CompteAvecDecouvert compte;
 
 	@Before
-	public void setUp() throws IllegalFormatException {
-		compte = new CompteSansDecouvert("FR0123456789", 100, new Client());
+	public void setUp() throws IllegalFormatException, IllegalOperationException {
+		compte = new CompteAvecDecouvert("FR0123456789", 100, 100, new Client());
 	}
 
 	/**
-	 * Test de la classe getClassName() pour les CompteSansDecouvert
+	 * Test de la classe getClassName() pour les CompteAvecDecouvert
 	 */
 	@Test
-	public void testGetClassNameSansDecouvert() {
-		assertEquals("CompteSansDecouvert", compte.getClassName());
+	public void testGetClassNameAvecDecouvert() {
+		assertEquals("CompteAvecDecouvert", compte.getClass().getSimpleName());
 	}
+
+	/**
+	 * Tests en rapport avec la méthode "Debiter" de la classe
+	 * CompteAvecDecouvert
+	 * 
+	 * @throws IllegalFormatException
+	 */
 
 	/**
 	 * Test de la métode debiter avec un montant négatif
@@ -34,7 +42,7 @@ public class TestsCompteSansDecouvert {
 	@Test
 	public void testCrediterCompteMontantNegatif() {
 		/*
-		 * Méthode qui va tester la méthode debiter avec un montant négatif,
+		 * Méthode qui va tester la méthode debiteravec un montant négatif,
 		 * auquel cas il devrait attraper un IllegalFormatExcepion
 		 */
 		try {
@@ -47,22 +55,16 @@ public class TestsCompteSansDecouvert {
 		}
 	}
 
-	/**
-	 * Tests en rapport avec la méthode "Debiter" de la classe
-	 * CompteAvecDecouvert
-	 * 
-	 * @throws IllegalFormatException
-	 */
 	@Test
 	public void testDebiterCompteAvecDecouvertValeurPossible() throws IllegalFormatException {
 		/*
-		 * Méthode qui va tester la méthode debiter pour un compte sans
+		 * Méthode qui va tester la méthode debiter pour un compte avec
 		 * découvert avec un montant réalisable (en fonction du montant retiré
 		 * et du seuil maximal du compte avec découvert)
 		 */
 		try {
-			compte.debiter(50);
-			assertEquals(50.0, compte.getSolde(), 0.001);
+			compte.debiter(150);
+			assertEquals(-50.0, compte.getSolde(), 0.0001);
 		} catch (InsufficientFundsException e) {
 			fail("Il ne devrait pas avoir d'exception ici.");
 		}
@@ -71,13 +73,13 @@ public class TestsCompteSansDecouvert {
 	@Test
 	public void testDebiterCompteAvecDecouvertValeurImpossible() throws IllegalFormatException {
 		/*
-		 * Méthode qui va tester la méthode retrait pour un compte sans
+		 * Méthode qui va tester la méthode retrait pour un compte avec
 		 * découvert avec un montant irréalisable (un retrait qui irait au delà
 		 * du seuil pour le compte avec découvert). La fonction devrait renvoyer
-		 * une exception en cas de problême
+		 * une exception en cas de problème
 		 */
 		try {
-			compte.debiter(200);
+			compte.debiter(250);
 			fail("Il devrait avoir une InsufficientFundsException ici.");
 		} catch (InsufficientFundsException e) {
 		}

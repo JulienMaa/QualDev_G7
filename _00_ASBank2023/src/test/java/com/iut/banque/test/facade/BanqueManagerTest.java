@@ -2,6 +2,9 @@ package com.iut.banque.test.facade;
 
 import static org.junit.Assert.fail;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,14 +15,16 @@ import org.springframework.transaction.annotation.Transactional;
 import com.iut.banque.exceptions.IllegalOperationException;
 import com.iut.banque.facade.BanqueManager;
 
-//@RunWith indique à JUnit de prendre le class runner de Spirng
+//@RunWith indique à JUnit de prendre le class runner de Spring
 @RunWith(SpringJUnit4ClassRunner.class)
 // @ContextConfiguration permet de charger le context utilisé pendant les tests.
 // Par défault (si aucun argument n'est précisé), cherche le fichier
-/// src/com/iut/banque/test/TestsDaoHibernate-context.xml
-@ContextConfiguration("/test/resources/TestsBanqueManager-context.xml")
+/// src/com/iut/banque/test/DaoHibernateTest-context.xml
+@ContextConfiguration("classpath:BanqueManagerTest-context.xml")
 @Transactional("transactionManager")
-public class TestsBanqueManager {
+public class BanqueManagerTest {
+
+	Logger logger = Logger.getLogger(getClass().getName());
 
 	@Autowired
 	private BanqueManager bm;
@@ -31,11 +36,11 @@ public class TestsBanqueManager {
 			bm.loadAllClients();
 			bm.createClient("t.test1", "password", "test1nom", "test1prenom", "test town", true, "4242424242");
 		} catch (IllegalOperationException e) {
-			e.printStackTrace();
-			fail("IllegalOperationException récupérée : " + e.getStackTrace());
+			logger.log(Level.SEVERE, e.toString(), e);
+			fail("IllegalOperationException récupérée");
 		} catch (Exception te) {
-			te.printStackTrace();
-			fail("Une Exception " + te.getClass().getSimpleName() + " a été récupérée");
+			logger.log(Level.SEVERE, te.toString(), te);
+			fail("Exception récupérée");
 		}
 	}
 
@@ -44,11 +49,12 @@ public class TestsBanqueManager {
 		try {
 			bm.loadAllClients();
 			bm.createClient("t.test1", "password", "test1nom", "test1prenom", "test town", true, "0101010101");
-			fail();
-		} catch (IllegalOperationException e) {
+			fail("Une IllegalOperationException aurait dû être récupérée");
+		} catch (IllegalOperationException ignored) {
+			// Une exception est attendue.
 		} catch (Exception te) {
-			te.printStackTrace();
-			fail("Une Exception " + te.getClass().getSimpleName() + " a été récupérée");
+			logger.log(Level.SEVERE, te.toString(), te);
+			fail("Exception récupérée");
 		}
 	}
 
@@ -56,13 +62,13 @@ public class TestsBanqueManager {
 	@Test
 	public void TestSuppressionDunCompteAvecDecouvertAvecSoldeZero() {
 		try {
-
 			bm.deleteAccount(bm.getAccountById("CADV000000"));
 		} catch (IllegalOperationException e) {
-			e.printStackTrace();
-			fail("IllegalOperationException récupérée : " + e.getStackTrace());
+			logger.log(Level.SEVERE, e.toString(), e);
+			fail("IllegalOperationException récupérée");
 		} catch (Exception te) {
-			fail("Une Exception " + te.getClass().getSimpleName() + " a été récupérée");
+			logger.log(Level.SEVERE, te.toString(), te);
+			fail("Exception récupérée");
 		}
 	}
 
@@ -71,9 +77,11 @@ public class TestsBanqueManager {
 		try {
 			bm.deleteAccount(bm.getAccountById("CADNV00000"));
 			fail("Une IllegalOperationException aurait dû être récupérée");
-		} catch (IllegalOperationException e) {
+		} catch (IllegalOperationException ignored) {
+			// Une exception est attendue.
 		} catch (Exception te) {
-			fail("Une Exception " + te.getClass().getSimpleName() + " a été récupérée");
+			logger.log(Level.SEVERE, te.toString(), te);
+			fail("Exception récupérée");
 		}
 	}
 
@@ -82,10 +90,11 @@ public class TestsBanqueManager {
 		try {
 			bm.deleteAccount(bm.getAccountById("CSDV000000"));
 		} catch (IllegalOperationException e) {
-			e.printStackTrace();
-			fail("IllegalOperationException récupérée : " + e.getStackTrace());
+			logger.log(Level.SEVERE, e.toString(), e);
+			fail("IllegalOperationException récupérée");
 		} catch (Exception te) {
-			fail("Une Exception " + te.getClass().getSimpleName() + " a été récupérée");
+			logger.log(Level.SEVERE, te.toString(), te);
+			fail("Exception récupérée");
 		}
 	}
 
@@ -94,9 +103,11 @@ public class TestsBanqueManager {
 		try {
 			bm.deleteAccount(bm.getAccountById("CSDNV00000"));
 			fail("Une IllegalOperationException aurait dû être récupérée");
-		} catch (IllegalOperationException e) {
+		} catch (IllegalOperationException ignored) {
+			// Une exception est attendue.
 		} catch (Exception te) {
-			fail("Une Exception " + te.getClass().getSimpleName() + " a été récupérée");
+			logger.log(Level.SEVERE, te.toString(), te);
+			fail("Exception récupérée");
 		}
 	}
 
@@ -107,11 +118,11 @@ public class TestsBanqueManager {
 			bm.loadAllClients();
 			bm.deleteUser(bm.getUserById("g.pasdecompte"));
 		} catch (IllegalOperationException e) {
-			e.printStackTrace();
-			fail("IllegalOperationException récupérée : " + e.getStackTrace());
+			logger.log(Level.SEVERE, e.toString(), e);
+			fail("IllegalOperationException récupérée");
 		} catch (Exception te) {
-			te.printStackTrace();
-			fail("Une Exception " + te.getClass().getSimpleName() + " a été récupérée");
+			logger.log(Level.SEVERE, te.toString(), te);
+			fail("Exception récupérée");
 		}
 	}
 
@@ -121,10 +132,11 @@ public class TestsBanqueManager {
 		try {
 			bm.deleteUser(bm.getUserById("admin"));
 			fail("Une IllegalOperationException aurait dû être récupérée");
-		} catch (IllegalOperationException e) {
+		} catch (IllegalOperationException ignored) {
+			// Une exception est attendue.
 		} catch (Exception te) {
-			te.printStackTrace();
-			fail("Une Exception " + te.getClass().getSimpleName() + " a été récupérée");
+			logger.log(Level.SEVERE, te.toString(), te);
+			fail("Exception récupérée");
 		}
 	}
 
@@ -137,11 +149,11 @@ public class TestsBanqueManager {
 				fail("Les comptes de l'utilisateur sont encore présents dans la base de données");
 			}
 		} catch (IllegalOperationException e) {
-			e.printStackTrace();
-			fail("IllegalOperationException récupérée : " + e.getStackTrace());
+			logger.log(Level.SEVERE, e.toString(), e);
+			fail("IllegalOperationException récupérée");
 		} catch (Exception te) {
-			te.printStackTrace();
-			fail("Une Exception " + te.getClass().getSimpleName() + " a été récupérée");
+			logger.log(Level.SEVERE, te.toString(), te);
+			fail("Exception récupérée");
 		}
 	}
 
@@ -150,9 +162,11 @@ public class TestsBanqueManager {
 		try {
 			bm.deleteUser(bm.getUserById("j.doe1"));
 			fail("Une IllegalOperationException aurait dû être récupérée");
-		} catch (IllegalOperationException e) {
+		} catch (IllegalOperationException ignored) {
+			// Une exception est attendue.
 		} catch (Exception te) {
-			fail("Une Exception " + te.getClass().getSimpleName() + " a été récupérée");
+			logger.log(Level.SEVERE, te.toString(), te);
+			fail("Exception récupérée");
 		}
 	}
 
@@ -161,10 +175,11 @@ public class TestsBanqueManager {
 		try {
 			bm.deleteUser(bm.getUserById("j.doe1"));
 			fail("Une IllegalOperationException aurait dû être récupérée");
-		} catch (IllegalOperationException e) {
+		} catch (IllegalOperationException ignored) {
+			// Une exception est attendue.
 		} catch (Exception te) {
-			fail("Une Exception " + te.getClass().getSimpleName() + " a été récupérée");
+			logger.log(Level.SEVERE, te.toString(), te);
+			fail("Exception récupérée");
 		}
 	}
-
 }
