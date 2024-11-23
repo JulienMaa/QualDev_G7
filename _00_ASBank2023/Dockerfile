@@ -1,19 +1,22 @@
 FROM openjdk:11-jdk-slim AS build
-FROM tomcat:9.0-jdk11-openjdk-slim
 
-WORKDIR /
+WORKDIR /app
 
 RUN apt-get update && apt-get install -y maven
 
 COPY pom.xml .
 
-RUN mvn -B dependency:resolve
+RUN mvn -B -f pom.xml dependency:resolve
 
 COPY src ./src
 
 RUN mvn clean package -DskipTests
 
-COPY --from=build /app/target/*.war /usr/local/tomcat/webapps/
+FROM tomcat:9.0-jdk11-openjdk-slim
+
+#COPY --from=build /app/target/*.war /usr/local/tomcat/webapps/
+
+COPY target/*.war /usr/local/tomcat/webapps/ROOT.war
 
 EXPOSE 8082
 

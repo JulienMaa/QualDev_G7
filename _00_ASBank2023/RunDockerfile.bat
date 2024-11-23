@@ -1,1 +1,1 @@
-docker build -t banque-iut .
+docker build --no-cache -t banque-iut .
