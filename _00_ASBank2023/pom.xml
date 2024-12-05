@@ -10,6 +10,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<sonar.organization>julienmaa</sonar.organization>
+		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
 
 	<build>
@@ -36,6 +38,7 @@
 
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
+				<!-- la version dans le screenshot est 3.3.2 -->
 				<version>2.6</version>
 				<configuration>
 					<warSourceDirectory>WebContent</warSourceDirectory>
