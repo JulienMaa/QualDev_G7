@@ -1,3 +1,6 @@
+CREATE DATABASE IF NOT EXISTS bankiuttest;
+USE bankiuttest;
+
 -- phpMyAdmin SQL Dump
 -- version 5.1.2
 -- https://www.phpmyadmin.net/

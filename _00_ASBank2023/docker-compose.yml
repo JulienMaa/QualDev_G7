@@ -18,7 +18,7 @@ services:
       - "3306:3306"
     volumes:
       - db-data:/var/lib/mysql
-      - ./script/dumpSQL_JUnitTest.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./script:/docker-entrypoint-initdb.d
     networks:
       - app-network
 
