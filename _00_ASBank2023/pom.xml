@@ -37,16 +37,6 @@
 			</plugin>
 
 			<plugin>
-				<artifactId>maven-war-plugin</artifactId>
-				<!-- la version dans le screenshot est 3.3.2 -->
-				<version>2.6</version>
-				<configuration>
-					<warSourceDirectory>WebContent</warSourceDirectory>
-					<failOnMissingWebXml>false</failOnMissingWebXml>
-					<webXml>WebContent/WEB-INF/web.xml</webXml>
-				</configuration>
-			</plugin>
-			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
 				<version>2.2</version>
