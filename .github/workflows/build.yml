@@ -57,10 +57,10 @@ jobs:
       # Set up database connection
       - name: Set up database connection
         env:
-          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}  # Set the secret as an env variable
+          MYSQL_PASSWORD: root
         run: |
           # Change to the directory containing the SQL scripts
-          cd _00_ASBank2023/scripts
+          cd _00_ASBank2023/script
           
           # Wait for MySQL to become available
           until mysql --host=db --user=root --password=root --execute="SELECT 1"; do
