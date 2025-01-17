@@ -21,7 +21,7 @@ jobs:
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping --host=db --user=root --password="${{ secrets.MYSQL_PASSWORD }}"
+          --health-cmd="mysqladmin ping --host=db --user=root --password=root
           --health-timeout=30s
           --health-retries=3
           --health-start-period=10s
@@ -62,13 +62,13 @@ jobs:
           cd _00_ASBank2023/scripts
           
           # Wait for MySQL to become available
-          until mysql --host=db --user=root --password="${{ secrets.MYSQL_PASSWORD }}" --execute="SELECT 1"; do
+          until mysql --host=db --user=root --password=root --execute="SELECT 1"; do
             echo "Waiting for MySQL to be available..."
             sleep 5s
           done
           
           # Execute the SQL script once the database is ready
-          mysql --host=db --user=root --password="${{ secrets.MYSQL_PASSWORD }}" --database=bankiut < create_db.sql
+          mysql --host=db --user=root --password=root --database=bankiut < create_db.sql
 
       # Execute Maven build and Sonar analysis
       - name: Build and analyze
