@@ -68,7 +68,7 @@ jobs:
           
           # Execute the SQL script once the database is ready
           mysql --host=db --user=root --password=${{ secrets.MYSQL_PASSWORD }} --database=bankiut < create_db.sql
-          
+  
       # Execute Maven build and Sonar analysis
       - name: Build and analyze
         env:
