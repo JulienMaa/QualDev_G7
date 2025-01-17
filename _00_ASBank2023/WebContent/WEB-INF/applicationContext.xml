@@ -32,7 +32,6 @@
 		<property name="hibernateProperties">
 			<props>
 				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLInnoDBDialect</prop>
-				<!-- <prop key="hibernate.default_schema">allard19u_coa_banque</prop> -->
 			</props>
 		</property>
 		<property name="packagesToScan" value="com.iut.banque.modele" />
@@ -43,7 +42,7 @@
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://27.0.0.1:3306/bankiut?useSSL=false" />
+		<property name="url" value="jdbc:mysql://db:3306/bankiut?useSSL=false&amp;allowPublicKeyRetrieval=true" />
 		<property name="username" value="root" />
 		<property name="password" value="root" />
 	</bean>
