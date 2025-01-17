@@ -9,26 +9,36 @@ jobs:
   build:
     name: Build and analyze
     runs-on: ubuntu-latest
+
+    # Set up database
+    services:
+      db:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: bankiut
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --host=127.0.0.1 --user=root --password=${{ secrets.MYSQL_PASSWORD }}"
+          --health-timeout=30s
+          --health-retries=3
+          --health-start-period=10s
+    
     steps:
       # Check out the repository
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-<<<<<<< HEAD
 
       # Set up JDK 17
-=======
->>>>>>> parent of d8df0d2 (Update build.yml)
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: 17
           distribution: 'zulu' # Alternative distribution options are available.
-<<<<<<< HEAD
 
       # Cache SonarQube Cloud packages
-=======
->>>>>>> parent of d8df0d2 (Update build.yml)
       - name: Cache SonarQube Cloud packages
         uses: actions/cache@v4
         with:
@@ -43,47 +53,28 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-<<<<<<< HEAD
 
-      # Install Docker and Docker Compose
-      - name: Install Docker and Docker Compose
+      # Set up database connection
+      - name: Set up database connection
         run: |
-          sudo apt-get update -y
-          sudo apt-get install -y --no-install-recommends apt-transport-https ca-certificates curl software-properties-common
-          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-          sudo apt-get update -y
-          sudo apt-get install -y --no-install-recommends docker-ce docker-ce-cli containerd.io docker-compose-plugin
-
-      # Verify Docker and Docker Compose
-      - name: Verify Docker and Docker Compose
-        run: |
-          docker --version
-          docker-compose --version
-
-      # Execute the Docker Compose setup via shell script
-      - name: Run Docker Compose setup
-        run: |
-          cd _00_ASBank2023
-          chmod +x RunDocker.sh
-          ./RunDocker.sh
-=======
-      # Set up Docker
-      - name: Set up Docker
-        uses: docker/setup-buildx-action@v2
-  
-      # Execute the Docker Compose setup via .bat script
-      - name: Run Docker Compose setup
-        run: |
-          cd _00_ASBank2023
-          chmod +x RunDocker.bat
-          ./RunDocker.bat
->>>>>>> parent of d8df0d2 (Update build.yml)
-        shell: bash
-
+          # Change to the directory containing the SQL scripts
+          cd _00_ASBank2023/scripts
+          
+          # Wait for MySQL to become available
+          until mysql --host=db --user=root --password=${{ secrets.MYSQL_PASSWORD }} --execute="SELECT 1"; do
+            echo "Waiting for MySQL to be available..."
+            sleep 5s
+          done
+          
+          # Execute the SQL script once the database is ready
+          mysql --host=db --user=root --password=${{ secrets.MYSQL_PASSWORD }} --database=bankiut < create_db.sql
+          
       # Execute Maven build and Sonar analysis
       - name: Build and analyze
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: cd _00_ASBank2023 && mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=JulienMaa_QualDev_G7
+        run: |
+          cd _00_ASBank2023
+          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=JulienMaa_QualDev_G7
+          mvn clean install
