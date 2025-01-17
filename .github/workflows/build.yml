@@ -30,8 +30,21 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
+      # Set up Docker
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
+  
+      # Execute the Docker Compose setup via .bat script
+      - name: Run Docker Compose setup
+        run: |
+          cd _00_ASBank2023
+          chmod +x RunDocker.bat
+          ./RunDocker.bat
+        shell: bash
+
+      # Execute Maven build and Sonar analysis
       - name: Build and analyze
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: cd _00_ASBank2023 && mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=JulienMaa_QualDev_G7
