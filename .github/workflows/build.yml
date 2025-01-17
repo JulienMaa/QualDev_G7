@@ -11,7 +11,6 @@ jobs:
     name: Build and analyze
     runs-on: ubuntu-latest
 
-    # Set up database
     services:
       db:
         image: mysql:8.0
@@ -21,7 +20,7 @@ jobs:
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping --host=db --user=root --password=root
+          --health-cmd="mysqladmin ping --host=db --user=root --password=root"
           --health-timeout=30s
           --health-retries=3
           --health-start-period=10s
@@ -57,6 +56,8 @@ jobs:
 
       # Set up database connection
       - name: Set up database connection
+        env:
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}  # Set the secret as an env variable
         run: |
           # Change to the directory containing the SQL scripts
           cd _00_ASBank2023/scripts
@@ -79,3 +80,4 @@ jobs:
           cd _00_ASBank2023
           mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=JulienMaa_QualDev_G7
           mvn clean install
+
