@@ -69,7 +69,7 @@ jobs:
           done
           
           # Execute the SQL script once the database is ready
-          mysql --host=127.0.0.1 --user=root --password=root --database=bankiut < create_db.sql
+          mysql --host=127.0.0.1 --user=root --password=root --database=bankiut < init.sql
 
       # Execute Maven build and Sonar analysis
       - name: Build and analyze
