@@ -48,6 +48,12 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y --no-install-recommends docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
+      # Verify Docker and Docker Compose
+      - name: Verify Docker and Docker Compose
+        run: |
+          docker --version
+          docker-compose --version
+
       # Execute the Docker Compose setup via shell script
       - name: Run Docker Compose setup
         run: |
