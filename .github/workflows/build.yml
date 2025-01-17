@@ -14,15 +14,21 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+<<<<<<< HEAD
 
       # Set up JDK 17
+=======
+>>>>>>> parent of d8df0d2 (Update build.yml)
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: 17
           distribution: 'zulu' # Alternative distribution options are available.
+<<<<<<< HEAD
 
       # Cache SonarQube Cloud packages
+=======
+>>>>>>> parent of d8df0d2 (Update build.yml)
       - name: Cache SonarQube Cloud packages
         uses: actions/cache@v4
         with:
@@ -37,6 +43,7 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
+<<<<<<< HEAD
 
       # Install Docker and Docker Compose
       - name: Install Docker and Docker Compose
@@ -60,6 +67,18 @@ jobs:
           cd _00_ASBank2023
           chmod +x RunDocker.sh
           ./RunDocker.sh
+=======
+      # Set up Docker
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
+  
+      # Execute the Docker Compose setup via .bat script
+      - name: Run Docker Compose setup
+        run: |
+          cd _00_ASBank2023
+          chmod +x RunDocker.bat
+          ./RunDocker.bat
+>>>>>>> parent of d8df0d2 (Update build.yml)
         shell: bash
 
       # Execute Maven build and Sonar analysis
