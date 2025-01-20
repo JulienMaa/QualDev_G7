@@ -22,6 +22,7 @@ jobs:
       # Build and Run Docker Environment
       - name: Build and Start Docker Compose
         run: |
+          cd _00_ASBank2023
           # Build and start the Docker containers
           docker-compose up -d --build
 
