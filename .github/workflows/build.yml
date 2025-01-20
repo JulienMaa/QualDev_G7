@@ -39,9 +39,6 @@ jobs:
             sleep 5s
           done
 
-          # Initialize the database
-          docker exec -i mysql_db mysql --user=root --password=root --database=bankiut < ./_00_ASBank2023/init.sql
-
       # Run Maven Build and Sonar Analysis
       - name: Run Maven Build and SonarQube Analysis
         env:
@@ -56,4 +53,6 @@ jobs:
       # Clean Up Docker Environment
       - name: Tear Down Docker
         if: always()
-        run: docker-compose down
+        run: |
+          cd _00_ASBank2023
+          docker-compose down
