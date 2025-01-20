@@ -1,4 +1,5 @@
-name: SonarQube Cloud
+name: SonarQube with Docker
+
 on:
   push:
     branches:
@@ -8,76 +9,43 @@ on:
 
 jobs:
   build:
-    name: Build and analyze
+    name: Build and Analyze with Docker
     runs-on: ubuntu-latest
 
-    services:
-      db:
-        image: mysql:8.0
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: bankiut
-        ports:
-          - 3306:3306
-        options: >-
-          --health-cmd="mysqladmin ping --host=127.0.0.1 --user=root --password=root"
-          --health-timeout=30s
-          --health-retries=3
-          --health-start-period=10s
-    
     steps:
       # Check out the repository
-      - uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0  # Full history for better analysis
 
-      # Set up JDK 17
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: 17
-          distribution: 'zulu' # Alternative distribution options are available.
-
-      # Cache SonarQube Cloud packages
-      - name: Cache SonarQube Cloud packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-
-      # Cache Maven packages
-      - name: Cache Maven packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-
-      # Set up database connection
-      - name: Set up database connection
-        env:
-          MYSQL_PASSWORD: root
+      # Build and Run Docker Environment
+      - name: Build and Start Docker Compose
         run: |
-          # Change to the directory containing the SQL scripts
-          cd _00_ASBank2023
-          
-          # Wait for MySQL to become available
-          until mysql --host=127.0.0.1 --user=root --password=root --execute="SELECT 1"; do
-            echo "Waiting for MySQL to be available..."
+          # Build and start the Docker containers
+          docker-compose up -d --build
+
+          # Wait for MySQL to be ready
+          echo "Waiting for MySQL to be available..."
+          until docker exec <container_name_for_mysql> mysql --user=root --password=root --execute="SELECT 1"; do
             sleep 5s
           done
-          
-          # Execute the SQL script once the database is ready
-          mysql --host=127.0.0.1 --user=root --password=root --database=bankiut < init.sql
 
-      # Execute Maven build and Sonar analysis
-      - name: Build and analyze
+          # Initialize the database
+          docker exec -i <container_name_for_mysql> mysql --user=root --password=root --database=bankiut < ./_00_ASBank2023/init.sql
+
+      # Run Maven Build and Sonar Analysis
+      - name: Run Maven Build and SonarQube Analysis
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          cd _00_ASBank2023
-          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=JulienMaa_QualDev_G7
-          mvn clean install
+          # Execute Maven build and analysis inside the Docker container
+          docker exec <container_name_for_maven> mvn -f ./_00_ASBank2023/pom.xml clean verify \
+            org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+            -Dsonar.projectKey=JulienMaa_QualDev_G7
 
+      # Clean Up Docker Environment
+      - name: Tear Down Docker
+        if: always()
+        run: docker-compose down
