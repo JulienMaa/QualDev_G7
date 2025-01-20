@@ -158,10 +158,12 @@ public class DaoHibernate implements IDao {
 			throw new TechnicalException("User Id déjà utilisé.");
 		}
 
+		String hashedPwd = BCrypt.hashpw(userPwd, BCrypt.gensalt());
+
 		if (manager) {
-			user = new Gestionnaire(nom, prenom, adresse, male, userId, userPwd);
+			user = new Gestionnaire(nom, prenom, adresse, male, userId, hashedPwd);
 		} else {
-			user = new Client(nom, prenom, adresse, male, userId, userPwd, numClient);
+			user = new Client(nom, prenom, adresse, male, userId, hashedPwd, numClient);
 		}
 		session.save(user);
 
