@@ -81,6 +81,12 @@
 					compte ou un utilisateur -->
 				<param name="account">true</param>
 			</result>
+			<result name="input" type="redirectAction">
+				<param name="actionName">urlResultatSuppression</param>
+				<param name="compteInfo">%{compteInfo}</param>
+				<param name="client">%{client.userId}</param>
+				<param name="account">true</param>
+			</result>
 			<result name="ERROR" type="redirectAction">
 				<param name="actionName">urlResultatSuppression</param>
 				<param name="compte">%{compte}</param>
