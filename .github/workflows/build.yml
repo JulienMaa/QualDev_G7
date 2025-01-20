@@ -19,6 +19,13 @@ jobs:
         with:
           fetch-depth: 0  # Full history for better analysis
 
+       # Set up Docker Compose
+      - name: Set up Docker Compose
+        run: |
+          cd _00_ASBank2023
+          docker-compose --version || sudo curl -L "https://github.com/docker/compose/releases/download/v2.6.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+
       # Build and Run Docker Environment
       - name: Build and Start Docker Compose
         run: |
