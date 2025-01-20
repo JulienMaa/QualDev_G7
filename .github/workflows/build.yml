@@ -13,20 +13,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Check out the repository
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Full history for better analysis
 
-       # Set up Docker Compose
       - name: Set up Docker Compose
         run: |
           cd _00_ASBank2023
           docker-compose --version || sudo curl -L "https://github.com/docker/compose/releases/download/v2.6.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
           sudo chmod +x /usr/local/bin/docker-compose
 
-      # Build and Run Docker Environment
       - name: Build and Start Docker Compose
         run: |
           cd _00_ASBank2023
@@ -35,22 +32,20 @@ jobs:
 
           # Wait for MySQL to be ready
           echo "Waiting for MySQL to be available..."
-          until docker exec mysql_db mysql --user=root --password=root --execute="SELECT 1"; do
+          until docker exec db mysql --user=root --password=root --execute="SELECT 1"; do
             sleep 5s
           done
 
-      # Run Maven Build and Sonar Analysis
       - name: Run Maven Build and SonarQube Analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Execute Maven build and analysis inside the Docker container
-          docker exec app mvn -f ./_00_ASBank2023/pom.xml clean verify \
+          # Execute Maven build and Sonar analysis inside the build container
+          docker exec app mvn -f /app/_00_ASBank2023/pom.xml clean verify \
             org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
             -Dsonar.projectKey=JulienMaa_QualDev_G7
 
-      # Clean Up Docker Environment
       - name: Tear Down Docker
         if: always()
         run: |
