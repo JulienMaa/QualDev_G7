@@ -42,7 +42,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Execute Maven build and Sonar analysis inside the build container
-          docker exec app mvn -f /app/_00_ASBank2023/pom.xml clean verify \
+          docker exec app mvn -f ./_00_ASBank2023/pom.xml clean verify \
             org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
             -Dsonar.projectKey=JulienMaa_QualDev_G7
 
