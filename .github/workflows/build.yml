@@ -22,6 +22,7 @@ jobs:
       # Build and Run Docker Environment
       - name: Build and Start Docker Compose
         run: |
+          cd _00_ASBank2023
           # Build and start the Docker containers
           docker-compose up -d --build
 
@@ -40,6 +41,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          cd _00_ASBank2023
           # Execute Maven build and analysis inside the Docker container
           docker exec <container_name_for_maven> mvn -f ./_00_ASBank2023/pom.xml clean verify \
             org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
