@@ -60,7 +60,7 @@ jobs:
           MYSQL_PASSWORD: root
         run: |
           # Change to the directory containing the SQL scripts
-          cd _00_ASBank2023/script
+          cd _00_ASBank2023
           
           # Wait for MySQL to become available
           until mysql --host=127.0.0.1 --user=root --password=root --execute="SELECT 1"; do
