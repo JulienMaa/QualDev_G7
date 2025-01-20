@@ -2,6 +2,7 @@ package com.iut.banque.controller;
 
 import com.iut.banque.exceptions.IllegalFormatException;
 import com.iut.banque.exceptions.IllegalOperationException;
+import com.iut.banque.facade.BanqueFacade;
 import com.iut.banque.modele.CompteAvecDecouvert;
 import java.util.logging.Logger;
 
@@ -16,6 +17,12 @@ public class DetailCompteEdit extends DetailCompte {
 	 */
 	public DetailCompteEdit() {
 		super();
+		logger.info("======================================");
+		logger.info("Dans le constructeur DetailCompteEdit");
+	}
+
+	public DetailCompteEdit(BanqueFacade banqueFacade) {
+		super(banqueFacade);
 		logger.info("======================================");
 		logger.info("Dans le constructeur DetailCompteEdit");
 	}
@@ -42,15 +49,16 @@ public class DetailCompteEdit extends DetailCompte {
 	 */
 	@SuppressWarnings("unused")
 	public String changementDecouvert() {
-		if (!(getCompte() instanceof CompteAvecDecouvert)) {
+		compte = getCompte();
+		if (!(compte instanceof CompteAvecDecouvert)) {
 			return "ERROR";
 		}
+
 		try {
 			double decouvert = Double.parseDouble(decouvertAutorise);
-			banque.changeDecouvert((CompteAvecDecouvert) getCompte(), decouvert);
+			banque.changeDecouvert((CompteAvecDecouvert) compte, decouvert);
 			return "SUCCESS";
 		} catch (NumberFormatException nfe) {
-			//nfe.printStackTrace()
 			return "ERROR";
 		} catch (IllegalFormatException e) {
 			return "NEGATIVEOVERDRAFT";
@@ -58,5 +66,4 @@ public class DetailCompteEdit extends DetailCompte {
 			return "INCOMPATIBLEOVERDRAFT";
 		}
 	}
-
 }

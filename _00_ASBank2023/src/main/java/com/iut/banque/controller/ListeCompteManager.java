@@ -39,6 +39,10 @@ public class ListeCompteManager extends ActionSupport {
 
 	}
 
+	public ListeCompteManager(BanqueFacade banqueFacade) {
+		logger.info("In Constructor from ListeCompteManager class ");
+		this.banque = banqueFacade;
+	}
 	/**
 	 * Méthode qui va renvoer la liste de tous les clients sous forme de hashmap
 	 * 
