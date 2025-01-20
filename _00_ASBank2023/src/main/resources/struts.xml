@@ -9,9 +9,11 @@
 	<!-- * Fichier de configuration du Framework STRUTS * -->
 	<!-- ************************************************ -->
 
-	<!-- Permet d'activer le mode de developpement. Celui-ci donne des informations 
-		supplémentaires. -->
+	<!-- Permet d'activer le mode de developpement. Celui-ci donne des informations supplémentaires. -->
 	<constant name="struts.devMode" value="true" />
+
+	<!-- Permet d'activer la prise en charge des préfixes d'action dans les URL -->
+	<constant name="struts.mapper.action.prefix.enabled" value="true" />
 
 	<package name="com.iut.banque" namespace="/" extends="struts-default">
 
@@ -61,8 +63,12 @@
 
 		<!-- Appel de la page compte avec un paramètre donné -->
 
-		<action name="urlDetail" class="com.iut.banque.controller.DetailCompte">
+		<action name="urlDetail" class="com.iut.banque.controller.DetailCompte" method="initCompte">
 			<result name="success">/JSP/DetailCompte.jsp</result>
+			<result name="input">/JSP/DetailCompte.jsp</result>
+			<result name="error" type="redirectAction">
+				<param name="actionName">retourTableauDeBordClient</param>
+			</result>
 		</action>
 
 		<action name="listeCompteManager" class="com.iut.banque.controller.ListeCompteManager">
@@ -134,36 +140,39 @@
 
 		<!-- Modification d'un compte par un manager -->
 
-		<action name="editAccount" class="com.iut.banque.controller.DetailCompteEdit">
-			<result name="SUCCESS">/JSP/DetailCompteEdit.jsp</result>
-			<result>/JSP/DetailCompteEdit.jsp</result>
+		<action name="editAccount" class="com.iut.banque.controller.DetailCompteEdit" method="initCompte">
+			<result name="success">/JSP/DetailCompteEdit.jsp</result>
+			<result name="input">/JSP/DetailCompteEdit.jsp</result>
+			<result name="error" type="redirectAction">
+				<param name="actionName">listeCompteManager</param>
+			</result>
 		</action>
 
 		<action name="changerDecouvertAutoriseAction" class="com.iut.banque.controller.DetailCompteEdit"
 			method="changementDecouvert">
 			<result name="SUCCESS" type="redirectAction">
 				<param name="actionName">editAccount</param>
-				<param name="compte">%{compte}</param>
+				<param name="numeroCompte">%{numeroCompte}</param>
 			</result>
 			<result name="ERROR" type="redirectAction">
 				<param name="actionName">editAccount</param>
-				<param name="compte">%{compte}</param>
+				<param name="numeroCompte">%{numeroCompte}</param>
 				<param name="error">TECHNICAL</param>
 			</result>
 			<result name="NEGATIVEOVERDRAFT" type="redirectAction">
 				<param name="actionName">editAccount</param>
-				<param name="compte">%{compte}</param>
+				<param name="numeroCompte">%{numeroCompte}</param>
 				<param name="error">NEGATIVEOVERDRAFT</param>
 			</result>
 			<result name="INCOMPATIBLEOVERDRAFT" type="redirectAction">
 				<param name="actionName">editAccount</param>
-				<param name="compte">%{compte}</param>
+				<param name="numeroCompte">%{numeroCompte}</param>
 				<param name="error">INCOMPATIBLEOVERDRAFT</param>
 			</result>
 		</action>
-
 		
 		<!-- Création de compte -->
+
 		<action name="addAccount" class="com.iut.banque.controller.CreerCompte"
 			method="creationCompte">
 			<result name="SUCCESS" type="redirectAction">
@@ -191,85 +200,80 @@
 		</action>
 
 		<action name="urlAddAccount" class="com.iut.banque.controller.CreerCompte">
+			<result name="input">/JSP/CreerCompte.jsp</result>
 			<result>/JSP/CreerCompte.jsp</result>
 		</action>
 
 		<!-- Opération sur les comptes -->
 
-		<action name="creditAction" class="com.iut.banque.controller.DetailCompte"
-			method="credit">
-			<result name="SUCCESS">/JSP/DetailCompte.jsp</result>
-			<result name="ERROR" type="redirectAction">
+		<action name="creditAction" class="com.iut.banque.controller.DetailCompte" method="credit">
+			<result name="success">/JSP/DetailCompte.jsp</result>
+			<result name="error" type="redirectAction">
 				<param name="actionName">urlDetail</param>
-				<param name="compte">%{compte}</param>
+				<param name="numeroCompte">%{numeroCompte}</param>
 				<param name="error">TECHNICAL</param>
 			</result>
 			<result name="NEGATIVEAMOUNT" type="redirectAction">
 				<param name="actionName">urlDetail</param>
-				<param name="compte">%{compte}</param>
+				<param name="numeroCompte">%{numeroCompte}</param>
 				<param name="error">NEGATIVEAMOUNT</param>
 			</result>
 		</action>
 
-
-		<action name="debitAction" class="com.iut.banque.controller.DetailCompte"
-			method="debit">
-			<result name="SUCCESS">/JSP/DetailCompte.jsp</result>
-			<result name="ERROR" type="redirectAction">
+		<action name="debitAction" class="com.iut.banque.controller.DetailCompte" method="debit">
+			<result name="success">/JSP/DetailCompte.jsp</result>
+			<result name="error" type="redirectAction">
 				<param name="actionName">urlDetail</param>
-				<param name="compte">%{compte}</param>
+				<param name="numeroCompte">%{numeroCompte}</param>
 				<param name="error">TECHNICAL</param>
 			</result>
-			<result name="NOTENOUGHFUNDS" type="redirectAction">
+			<result name="NOTENOUGH_FUNDS" type="redirectAction">
 				<param name="actionName">urlDetail</param>
-				<param name="compte">%{compte}</param>
+				<param name="numeroCompte">%{numeroCompte}</param>
 				<param name="error">BUSINESS</param>
 			</result>
 			<result name="NEGATIVEAMOUNT" type="redirectAction">
 				<param name="actionName">urlDetail</param>
-				<param name="compte">%{compte}</param>
+				<param name="numeroCompte">%{numeroCompte}</param>
 				<param name="error">NEGATIVEAMOUNT</param>
 			</result>
 		</action>
 		
-		<action name="creditActionEdit" class="com.iut.banque.controller.DetailCompteEdit"
-			method="credit">
-			<result name="SUCCESS" type="redirectAction">
+		<action name="creditActionEdit" class="com.iut.banque.controller.DetailCompteEdit" method="credit">
+			<result name="success" type="redirectAction">
 				<param name="actionName">editAccount</param>
-				<param name="compte">%{compte}</param>
+				<param name="numeroCompte">%{numeroCompte}</param>
 			</result>
-			<result name="ERROR" type="redirectAction">
+			<result name="error" type="redirectAction">
 				<param name="actionName">editAccount</param>
-				<param name="compte">%{compte}</param>
+				<param name="numeroCompte">%{numeroCompte}</param>
 				<param name="error">TECHNICAL</param>
 			</result>
 			<result name="NEGATIVEAMOUNT" type="redirectAction">
 				<param name="actionName">editAccount</param>
-				<param name="compte">%{compte}</param>
+				<param name="numeroCompte">%{numeroCompte}</param>
 				<param name="error">NEGATIVEAMOUNT</param>
 			</result>
 		</action>
 
-
-		<action name="debitActionEdit" class="com.iut.banque.controller.DetailCompteEdit"
-			method="debit">
-			<result name="SUCCESS" type="redirectAction">
+		<action name="debitActionEdit" class="com.iut.banque.controller.DetailCompteEdit" method="debit">
+			<result name="success" type="redirectAction">
 				<param name="actionName">editAccount</param>
-				<param name="compte">%{compte}</param>
+				<param name="numeroCompte">%{numeroCompte}</param>
 			</result>
-			<result name="ERROR" type="redirectAction">
+			<result name="error" type="redirectAction">
 				<param name="actionName">editAccount</param>
-				<param name="compte">%{compte}</param>
+				<param name="numeroCompte">%{numeroCompte}</param>
 				<param name="error">TECHNICAL</param>
 			</result>
-			<result name="NOTENOUGHFUNDS" type="redirectAction">
+			<result name="NOTENOUGH_FUNDS" type="redirectAction">
 				<param name="actionName">editAccount</param>
-				<param name="compte">%{compte}</param>
+				<param name="numeroCompte">%{numeroCompte}</param>
 				<param name="error">BUSINESS</param>
 			</result>
 			<result name="NEGATIVEAMOUNT" type="redirectAction">
 				<param name="actionName">editAccount</param>
-				<param name="compte">%{compte}</param>
+				<param name="numeroCompte">%{numeroCompte}</param>
 				<param name="error">NEGATIVEAMOUNT</param>
 			</result>
 		</action>

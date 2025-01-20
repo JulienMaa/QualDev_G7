@@ -1,13 +1,13 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+<%@ page contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<html lang="fr">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="/_00_ASBank2023/style/style.css" />
 
-<title>Détail du Compte <s:property value="compte" /></title>
+<title>Détail du Compte <s:property value="numeroCompte" /></title>
 </head>
 <body>
 	<div class="btnLogout">
@@ -17,7 +17,7 @@
 	</div>
 	<h1>
 		Détail du Compte
-		<s:property value="compte" />
+		<s:property value="numeroCompte" />
 	</h1>
 	<br />
 	<div class="btnBack">
@@ -45,20 +45,19 @@
 		</s:else>
 		<s:if test="%{compte.className == \"CompteAvecDecouvert\"}">
 			Découvert maximal autorisé : <s:property
-				value="compte.decouvertAutorise" />
+				value="compteBanque.decouvertAutorise" />
 		</s:if>
 		<br />
 	</p>
-	<s:form name="formOperation" action="creditAction" method="post">
+	<s:form name="formOperation" method="post">
+		<input type="hidden" name="numeroCompte" value="<s:property value='numeroCompte' />">
 		<s:textfield label="Montant" name="montant" />
-		<input type="hidden" name="compte"
-			value="<s:property value='compte' />">
-		<s:submit value="Crediter" />
+		<s:submit value="Crediter" action="creditAction" />
 		<s:submit value="Debiter" action="debitAction" />
 	</s:form>
 
 	<s:url action="urlDetail" var="urlDetail">
-		<s:param name="compte">
+		<s:param name="numeroCompte">
 			<s:property value="key" />
 		</s:param>
 	</s:url>

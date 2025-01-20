@@ -1,8 +1,8 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+<%@ page contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="/struts-tags"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<html lang="fr">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="/_00_ASBank2023/style/style.css" />
@@ -17,7 +17,7 @@
 	</div>
 	<h1>
 		Détail du Compte
-		<s:property value="compte" />
+		<s:property value="numeroCompte" />
 	</h1>
 	<br />
 	<div class="btnBack">
@@ -49,21 +49,18 @@
 		</s:if>
 		<br />
 	</p>
-	<s:form name="formOperation" action="creditActionEdit" method="post">
+
+	<s:form name="formOperation" method="post">
+		<input type="hidden" name="numeroCompte" value="<s:property value='numeroCompte' />">
 		<s:textfield label="Montant" name="montant" />
-		<input type="hidden" name="compte"
-			value="<s:property value='compte.numeroCompte' />">
-		<s:submit value="Crediter" />
+		<s:submit value="Crediter" action="creditActionEdit" />
 		<s:submit value="Debiter" action="debitActionEdit" />
 	</s:form>
 
 	<s:if test="%{compte.className == \"CompteAvecDecouvert\"}">
-		<s:form name="formChangeDecouvertAutorise"
-			action="changerDecouvertAutoriseAction" method="post">
-			<input type="hidden" name="compte"
-				value="<s:property value='compte.numeroCompte' />">
-			<s:textfield label="Découvert autorisé" name="decouvertAutorise"
-				value="%{compte.decouvertAutorise}" />
+		<s:form name="formChangeDecouvertAutorise" action="changerDecouvertAutoriseAction" method="post">
+			<input type="hidden" name="numeroCompte" value="<s:property value='numeroCompte' />">
+			<s:textfield label="Découvert autorisé" name="decouvertAutorise" value="%{compte.decouvertAutorise}" />
 			<s:submit value="Mettre à jour" />
 		</s:form>
 	</s:if>

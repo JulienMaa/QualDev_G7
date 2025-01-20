@@ -3,7 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ taglib prefix="s" uri="/struts-tags"%>
 
-<html>
+<html lang="fr">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Tableau de bord</title>
@@ -30,8 +30,7 @@
 		<s:iterator value="accounts">
 			<tr>
 				<td><s:url action="urlDetail" var="urlDetail">
-						<s:param name="compte"><s:property value="key" /></s:param> 
-						<%-- <s:param name="idCompte"><s:property value="key" /></s:param> --%>
+						<s:param name="numeroCompte"><s:property value="key" /></s:param>
 					</s:url> <s:a href="%{urlDetail}">
 						<s:property value="key" />
 					</s:a></td>
