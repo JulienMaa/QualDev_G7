@@ -42,12 +42,15 @@ public class SeleniumTest {
 
   public boolean urlExists(String url) {
     try {
+      // Connect to the web page
       HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
       connection.setRequestMethod("HEAD");
       connection.setConnectTimeout(3000);
       connection.setReadTimeout(3000);
+
+      // Get the code returned by the page
       int responseCode = connection.getResponseCode();
-      return (200 <= responseCode && responseCode < 400);
+      return (responseCode == 200);
     } catch (Exception e) {
       return false;
     }
