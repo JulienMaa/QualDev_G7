@@ -20,7 +20,8 @@
 	<p>
 		<img
 			src="/_00_ASBank2023/style/logo.png"
-			alt="logo" />
+			alt="logo"
+			id="logo" />
 	</p>
 	<input type="button" value="Information" name="info"
 		onClick="DisplayMessage()" />
