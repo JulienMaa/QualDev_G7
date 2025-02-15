@@ -3,7 +3,7 @@ name: SonarQube with Docker
 on:
   push:
     branches:
-      - dev_workflow
+      - main
   pull_request:
     types: [opened, synchronize, reopened]
 
