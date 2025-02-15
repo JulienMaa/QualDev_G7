@@ -24,27 +24,38 @@ public class SeleniumTest {
   private String usernameFieldName;
   private String passwordFieldName;
   private String successElementId;
+  private boolean successSetup = false;
 
   @Before
   public void setUp() {
-    System.setProperty("webdriver.chrome.driver", "src\\main\\resources\\chromedriver.exe");
-    driver = new ChromeDriver();
-    driver.manage().window().setSize(new Dimension(842, 816));
+    try {
+      System.setProperty("webdriver.chrome.driver", "src\\main\\resources\\chromedriver.exe");
+      driver = new ChromeDriver();
+      driver.manage().window().setSize(new Dimension(842, 816));
 
-    // Charger les valeurs de config.properties
-    baseUrl = ConfigReader.getProperty("baseUrl");
-    loginPage = ConfigReader.getProperty("loginPage");
-    username = ConfigReader.getProperty("username");
-    password = ConfigReader.getProperty("password");
-    loginButtonName = ConfigReader.getProperty("loginButtonName");
-    usernameFieldName = ConfigReader.getProperty("usernameFieldName");
-    passwordFieldName = ConfigReader.getProperty("passwordFieldName");
-    successElementId = ConfigReader.getProperty("successElementId");
+      // Charger les valeurs de config.properties
+      baseUrl = ConfigReader.getProperty("baseUrl");
+      loginPage = ConfigReader.getProperty("loginPage");
+      username = ConfigReader.getProperty("username");
+      password = ConfigReader.getProperty("password");
+      loginButtonName = ConfigReader.getProperty("loginButtonName");
+      usernameFieldName = ConfigReader.getProperty("usernameFieldName");
+      passwordFieldName = ConfigReader.getProperty("passwordFieldName");
+      successElementId = ConfigReader.getProperty("successElementId");
+
+      successSetup = true;
+    } catch (Exception e) {
+      System.err.println("Échec du setup Selenium : " + e.getMessage());
+    }
+
+    assumeTrue("Skipping tests because WebDriver setup failed", successSetup);
   }
 
   @After
   public void tearDown() {
-    driver.quit();
+    if (driver != null) {
+      driver.quit();
+    }
   }
 
   @Test
