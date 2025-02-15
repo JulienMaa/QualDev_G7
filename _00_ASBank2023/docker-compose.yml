@@ -26,6 +26,7 @@ services:
 
 networks:
   app-network:
+    name: app-network
 
 volumes:
   db-data:

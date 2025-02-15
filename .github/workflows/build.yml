@@ -3,34 +3,45 @@ name: SonarQube with Docker
 on:
   push:
     branches:
-      - main
+      - dev_workflow
   pull_request:
     types: [opened, synchronize, reopened]
 
 jobs:
   build:
-    name: Build and Analyze with Docker
+    name: Build and Analyze
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Full history for better analysis
+          fetch-depth: 0
+
+      - name: Cache SonarQube packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
 
       - name: Set up Docker Compose
         run: |
-          cd _00_ASBank2023
           docker-compose --version || sudo curl -L "https://github.com/docker/compose/releases/download/v2.6.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
           sudo chmod +x /usr/local/bin/docker-compose
 
       - name: Build and Start Docker Compose
         run: |
           cd _00_ASBank2023
-          # Build and start the Docker containers
           docker-compose up -d --build
 
-          # Wait for MySQL to be ready
           echo "Waiting for MySQL to be available..."
           until docker exec mysql_db mysql --user=root --password=root --execute="SELECT 1"; do
             sleep 5s
@@ -41,10 +52,15 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Execute Maven build and Sonar analysis inside the build container
-          docker exec app mvn -f ./_00_ASBank2023/pom.xml clean verify \
-            org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-            -Dsonar.projectKey=JulienMaa_QualDev_G7
+          cd _00_ASBank2023
+          docker run --rm \
+          --network app-network \
+          -v "$(pwd)":/usr/src/app \
+          -w /usr/src/app \
+          maven:3.6.3-jdk-11 \
+          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+          -Dsonar.projectKey=JulienMaa_QualDev_G7 \
+          -Dsonar.login=$SONAR_TOKEN
 
       - name: Tear Down Docker
         if: always()
