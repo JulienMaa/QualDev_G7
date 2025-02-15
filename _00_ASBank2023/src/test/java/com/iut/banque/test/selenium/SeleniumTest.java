@@ -49,22 +49,21 @@ public class SeleniumTest {
 
   @Test
   public void testLogoExist() {
-    String url = baseUrl;
+    assumeTrue("Skipping test as URL is unreachable", urlExists(baseUrl));
 
-    assumeTrue("Skipping test as URL is unreachable", urlExists(url));
+    driver.get(baseUrl);
 
-    driver.get(url);
     WebElement logo = driver.findElement(By.id("logo"));
+
     Assert.assertNotNull(logo);
   }
 
   @Test
   public void testLogin() {
+    assumeTrue("Skipping test as URL is unreachable", urlExists(baseUrl + loginPage));
+
     // Aller à la page de connexion
     driver.get(baseUrl + loginPage);
-
-    // Vérifier si la page s'est bien chargée
-    assumeTrue("Skipping test as URL is unreachable", urlExists(baseUrl + loginPage));
 
     // Remplir le formulaire de connexion
     WebElement usernameInput = driver.findElement(By.name(usernameFieldName));
@@ -77,6 +76,7 @@ public class SeleniumTest {
 
     // Vérifier si la connexion a réussi en recherchant un élément spécifique sur la page
     WebElement successElement = driver.findElement(By.id(successElementId));
+
     Assert.assertNotNull("Connexion échouée, l'élément de confirmation n'a pas été trouvé", successElement);
   }
 
