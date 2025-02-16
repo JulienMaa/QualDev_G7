@@ -20,13 +20,14 @@
 	<p>
 		<img
 			src="/_00_ASBank2023/style/logo.png"
-			alt="logo" />
+			alt="logo"
+			id="logo" />
 	</p>
 	<input type="button" value="Information" name="info"
 		onClick="DisplayMessage()" />
 	<p style="font-size: 2em">
 		<s:url action="redirectionLogin" var="redirectionLogin" ></s:url>
-		<s:a href="%{redirectionLogin}">Page de Login</s:a>
+		<s:a href="%{redirectionLogin}" id="goToLogin">Page de Login</s:a>
 	</p>
 </body>
 <jsp:include page="/JSP/Footer.jsp" />

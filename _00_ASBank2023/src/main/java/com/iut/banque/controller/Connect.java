@@ -38,6 +38,11 @@ public class Connect extends ActionSupport {
 
 	}
 
+	public Connect(BanqueFacade banqueFacade) {
+		logger.info("In Constructor from Connect class ");
+		this.banque = banqueFacade;
+	}
+
 	/**
 	 * Méthode pour vérifier la connexion de l'utilisateur basé sur les
 	 * paramêtres userCde et userPwd de cette classe
